@@ -1,0 +1,13 @@
+{
+  "name": "akansha-proposal",
+  "version": "1.0.0",
+  "description": "An ultra-premium cinematic proposal website for Akansha Mishra",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": ["proposal", "love-story", "interactive-web", "awwwards"],
+  "author": "",
+  "license": "ISC"
+}
+
