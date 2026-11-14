@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
-  <title>AkanshaOS 18.0 ❤️ | By Rohan Shukla</title>
-  <meta name="description" content="A custom luxury operating system handcrafted for Akansha Mishra by Rohan Shukla.">
-  <meta name="theme-color" content="#07060d">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Akansha & Mummu Love Quiz ❤️ | 30 Romantic Questions</title>
+  <meta name="description" content="A 30-question love quiz handcrafted for Akansha Mishra by Rohan Shukla (Your Favourite Mummu).">
+  <meta name="theme-color" content="#0d0914">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Canvas Confetti CDN -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
@@ -20,545 +20,270 @@
 </head>
 <body>
 
-  <!-- Ambient Light Orbs -->
-  <div class="ambient-glow ambient-1"></div>
-  <div class="ambient-glow ambient-2"></div>
+  <!-- Ambient Glows -->
+  <div class="ambient-glow bg-orb-1"></div>
+  <div class="ambient-glow bg-orb-2"></div>
+  <div class="ambient-glow bg-orb-3"></div>
 
-  <!-- Background Atmosphere Canvas (Stars & Fireflies) -->
-  <canvas id="atmosphere-canvas"></canvas>
+  <!-- Background Stars Canvas -->
+  <canvas id="stars-canvas"></canvas>
 
-  <!-- Full-Screen Cinema Fireworks Canvas -->
+  <!-- Full-Screen Cinema Fireworks Canvas (For Climax & Celebration) -->
   <canvas id="fireworks-canvas"></canvas>
 
   <!-- Camera Flash Overlay -->
   <div id="flash-overlay"></div>
 
-  <!-- Native Background Audio Element with Autoplay -->
-  <audio id="bg-audio-tag" src="assets/bg_music.mp3" autoplay loop playsinline preload="auto"></audio>
+  <!-- Background Music Audio Element -->
+  <audio id="quiz-bg-audio" src="assets/bg_music.mp3" autoplay loop playsinline preload="auto"></audio>
 
   <!-- ==========================================================================
-       IPHONE VIEWPORT CONTAINER
+       START / WELCOME SCREEN (Autoplay Unlocker & Intro)
        ========================================================================== -->
-  <div class="os-viewport-container">
-    <div class="iphone-chassis">
-      <div class="iphone-screen">
+  <div id="intro-modal" class="intro-overlay">
+    <div class="intro-card">
+      <div class="intro-heart-icon">💖</div>
+      <div class="intro-badge">SPECIALLY CRAFTED FOR AKANSHA MISHRA</div>
+      <h1 class="intro-title">The 30-Question Love Quiz</h1>
+      <p class="intro-subtitle">
+        Borivali se lekar Dahisar tak... aur uss black dress wali pehli mulaqat se lekar aaj tak!
+      </p>
 
-        <!-- STATUS BAR -->
-        <div class="ios-status-bar">
-          <span id="status-clock" class="status-time">11:11</span>
-          <div class="status-icons">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 18.25c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l.73-.73C8.03 19.9 9.94 20.5 12 20.5c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
-            <span style="font-size: 0.72rem; font-weight: 700;">5G</span>
-            <span style="color: var(--primary-rose);">❤️ 100%</span>
-          </div>
+      <div class="intro-stats-grid">
+        <div class="intro-stat-pill">
+          <span class="pill-label">Total Questions</span>
+          <span class="pill-val">30 Pyaare Sawal</span>
         </div>
-
-        <!-- DYNAMIC ISLAND (Interactive Pill) -->
-        <div class="dynamic-island-wrapper">
-          <div id="dynamic-island" class="dynamic-island" title="Tap to expand Now Playing">
-            <!-- Compact State -->
-            <div class="island-compact-view">
-              <div class="island-icon-left">
-                <span style="font-size: 0.8rem;">❤️</span>
-                <span style="font-size: 0.72rem; font-weight: 600;">AkanshaOS</span>
-              </div>
-              <div class="island-icon-right">
-                <div class="island-eq-bar"></div>
-                <div class="island-eq-bar"></div>
-                <div class="island-eq-bar"></div>
-              </div>
-            </div>
-
-            <!-- Expanded State -->
-            <div class="island-expanded-view">
-              <img src="assets/photo2.jpg" alt="Akansha" class="island-album-art">
-              <div class="island-song-details">
-                <div class="island-title">Dil Ye Bekarar Kyun Hai 🎵</div>
-                <div class="island-artist">Playing for Akansha • Rohan</div>
-              </div>
-              <div style="font-size: 1.1rem; color: var(--primary-rose);">💖</div>
-            </div>
-          </div>
+        <div class="intro-stat-pill">
+          <span class="pill-label">Rule</span>
+          <span class="pill-val">Har sawal ka Screenshot Mummu ko bhejna hai! 📸</span>
         </div>
+      </div>
 
-        <!-- ==========================================================================
-             0. BOOT SCREEN
-             ========================================================================== -->
-        <div id="boot-screen">
-          <svg class="boot-apple-heart" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-          </svg>
-          <div class="boot-os-title">AkanshaOS 18.0</div>
-          <div class="boot-engineer-credit">Designed & Coded by Rohan Shukla (Software Engineer)</div>
+      <div class="intro-route-note">
+        📍 <strong>Borivali</strong> (Rohan) ⇄ <strong>Dahisar</strong> (Akansha) • 2.0 km
+      </div>
 
-          <div class="boot-progress-track">
-            <div id="boot-progress-fill" class="boot-progress-fill"></div>
-          </div>
+      <button id="btn-start-quiz" class="btn-start-pulse">
+        <span>✨ Start Love Quiz & Play Music 🎵 ✨</span>
+      </button>
 
-          <button id="boot-unlock-btn" class="boot-unlock-btn">
-            <span>✨ Tap to Unlock Akansha's World 🔒 ✨</span>
-          </button>
-        </div>
-
-        <!-- ==========================================================================
-             1. LOCK SCREEN
-             ========================================================================== -->
-        <div id="lockscreen-view">
-          <div class="lockscreen-header">
-            <div id="lock-date" class="lock-date-display">Saturday, November 14</div>
-            <div id="lock-clock" class="lock-time-display">11:11</div>
-
-            <div class="lock-widgets-container">
-              <div class="lock-widget-pill">
-                <span>📍 Borivali ⇄ Dahisar:</span>
-                <span class="widget-val">2 km</span>
-              </div>
-              <div class="lock-widget-pill">
-                <span>❤️ Battery:</span>
-                <span class="widget-val">100% Akansha</span>
-              </div>
-            </div>
-
-            <!-- PUSH NOTIFICATION FROM ROHAN -->
-            <div id="lock-notif-banner" class="ios-notification-banner" title="Tap to read messages">
-              <div class="notif-header">
-                <div class="notif-app-tag">
-                  <span>💬</span>
-                  <span>MESSAGES</span>
-                </div>
-                <span class="notif-time">Just now</span>
-              </div>
-              <div class="notif-sender">Rohan (Your Favourite Mummu)</div>
-              <div class="notif-message">"Hey Akansha... Borivali me dekha tha black kapdo me, tabhi se dil me bas gayi ho! ❤️"</div>
-            </div>
-          </div>
-
-          <div class="lockscreen-footer">
-            <button id="lock-swipe-btn" class="lock-swipe-pill">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
-              <span>Swipe or Tap to Open Home</span>
-            </button>
-            <div class="lock-tools-row">
-              <div class="lock-tool-btn" title="Flashlight">🔦</div>
-              <div class="lock-tool-btn" title="Camera">📷</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ==========================================================================
-             2. HOMESCREEN
-             ========================================================================== -->
-        <div id="homescreen-view">
-          <div>
-            <div class="home-search-pill">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <span>Search in Rohan's heart...</span>
-            </div>
-
-            <!-- 8 APPS GRID -->
-            <div class="ios-apps-grid">
-              <!-- App 1: Messages -->
-              <div class="ios-app-item" data-app="app-messages">
-                <div class="ios-app-icon icon-messages">💬</div>
-                <span class="ios-app-label">Messages</span>
-              </div>
-
-              <!-- App 2: Photos -->
-              <div class="ios-app-item" data-app="app-photos">
-                <div class="ios-app-icon icon-photos">📷</div>
-                <span class="ios-app-label">Photos</span>
-              </div>
-
-              <!-- App 3: Reels -->
-              <div class="ios-app-item" data-app="app-reels">
-                <div class="ios-app-icon icon-reels">🎬</div>
-                <span class="ios-app-label">Reels</span>
-              </div>
-
-              <!-- App 4: Maps -->
-              <div class="ios-app-item" data-app="app-maps">
-                <div class="ios-app-icon icon-maps">🗺️</div>
-                <span class="ios-app-label">Maps</span>
-              </div>
-
-              <!-- App 5: Notes -->
-              <div class="ios-app-item" data-app="app-notes">
-                <div class="ios-app-icon icon-notes">📝</div>
-                <span class="ios-app-label">Notes</span>
-              </div>
-
-              <!-- App 6: Scratch Card -->
-              <div class="ios-app-item" data-app="app-scratch">
-                <div class="ios-app-icon icon-scratch">🪙</div>
-                <span class="ios-app-label">Secret Gift</span>
-              </div>
-
-              <!-- App 7: Music -->
-              <div class="ios-app-item" data-app="app-music">
-                <div class="ios-app-icon icon-music">🎵</div>
-                <span class="ios-app-label">Music</span>
-              </div>
-
-              <!-- App 8: FaceTime (The Big Question Climax) -->
-              <div class="ios-app-item" id="app-trigger-facetime">
-                <div class="ios-app-icon icon-facetime">📞</div>
-                <span class="ios-app-label" style="color: var(--primary-rose); font-weight: 700;">FaceTime ❤️</span>
-              </div>
-            </div>
-
-            <!-- HOME WIDGET: BORIVALI TO DAHISAR -->
-            <div class="home-feature-widget" data-app="app-maps">
-              <div class="widget-route-info">
-                <h4>Borivali ⇄ Dahisar Route</h4>
-                <div class="widget-route-sub">Rohan's Place to Akansha's Place</div>
-              </div>
-              <div class="widget-badge-km">2.0 km • 5 min</div>
-            </div>
-          </div>
-
-          <!-- BOTTOM DOCK -->
-          <div class="ios-dock">
-            <div class="ios-app-item" data-app="app-messages">
-              <div class="ios-app-icon icon-messages" style="width: 52px; height: 52px;">💬</div>
-            </div>
-            <div class="ios-app-item" data-app="app-photos">
-              <div class="ios-app-icon icon-photos" style="width: 52px; height: 52px;">📷</div>
-            </div>
-            <div class="ios-app-item" data-app="app-reels">
-              <div class="ios-app-icon icon-reels" style="width: 52px; height: 52px;">🎬</div>
-            </div>
-            <div class="ios-app-item" id="dock-facetime-btn">
-              <div class="ios-app-icon icon-facetime" style="width: 52px; height: 52px;">📞</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ==========================================================================
-             APP WINDOW 1: MESSAGES (Chat Replay of Borivali & Black Dress)
-             ========================================================================== -->
-        <div id="app-messages" class="ios-app-window">
-          <div class="app-nav-bar">
-            <button class="app-back-btn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-              <span>Back</span>
-            </button>
-            <div class="app-nav-title">Akansha Mishra ❤️</div>
-            <button id="chat-replay-action" style="background:none; border:none; color:var(--gold-primary); font-size:1.1rem; cursor:pointer;" title="Replay Chat">🔄</button>
-          </div>
-          <div class="app-body-content">
-            <div style="text-align: center; margin-bottom: 14px; font-size: 0.75rem; color: var(--gold-light);">
-              "Borivali me dekha tha... black kapdo me!" 💬
-            </div>
-            <div id="chat-stream-ios" class="chat-bubbles-stream">
-              <!-- Replayed dynamically via JavaScript -->
-            </div>
-            <div id="chat-typing-bubble" class="ios-typing-indicator">
-              <div class="typing-dot"></div>
-              <div class="typing-dot"></div>
-              <div class="typing-dot"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ==========================================================================
-             APP WINDOW 2: PHOTOS (Gallery Lightbox)
-             ========================================================================== -->
-        <div id="app-photos" class="ios-app-window">
-          <div class="app-nav-bar">
-            <button class="app-back-btn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-              <span>Back</span>
-            </button>
-            <div class="app-nav-title">Favorites Album (Akansha)</div>
-            <span style="font-size: 0.85rem; color: var(--gold-primary);">3 Photos</span>
-          </div>
-          <div class="app-body-content">
-            <div class="photos-grid-view">
-              <div class="photo-card-thumb" style="grid-column: span 2; height: 260px;">
-                <img src="assets/photo2.jpg" alt="Akansha Portrait">
-              </div>
-              <div class="photo-card-thumb">
-                <img src="assets/photo1.jpg" alt="Akansha Smile">
-              </div>
-              <div class="photo-card-thumb">
-                <img src="assets/photo3.jpg" alt="Akansha Elegance">
-              </div>
-            </div>
-            <p style="text-align: center; font-size: 0.8rem; color: var(--primary-blush); margin-top: 20px; font-style: italic;">
-              "Duniya ki sabse khoobsurat muskaan aur aankhein... sirf mere dil ke liye ❤️"
-            </p>
-          </div>
-        </div>
-
-        <!-- ==========================================================================
-             APP WINDOW 3: REELS (Vertical Cinema Reels)
-             ========================================================================== -->
-        <div id="app-reels" class="ios-app-window">
-          <div class="app-nav-bar">
-            <button class="app-back-btn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-              <span>Back</span>
-            </button>
-            <div class="app-nav-title">Cinema Reels 🎬</div>
-            <span style="font-size: 0.85rem; color: var(--gold-primary);">2 Videos</span>
-          </div>
-          <div class="app-body-content">
-            <div class="reels-feed-container">
-              <!-- Reel 1 -->
-              <div class="reel-item-card">
-                <button class="reel-unmute-overlay reel-unmute-1">🔊 Tap to Unmute</button>
-                <video id="reel-video-1" playsinline muted loop autoplay preload="auto">
-                  <source src="assets/video.mp4" type="video/mp4">
-                </video>
-                <div class="reel-meta-overlay">
-                  <div class="reel-caption">"Ye main hoon, ab tumhe pata hona chahiye kis se roz ghanto baat hoti hai 😄❤️"</div>
-                </div>
-              </div>
-
-              <!-- Reel 2 -->
-              <div class="reel-item-card">
-                <button class="reel-unmute-overlay reel-unmute-2">🔊 Tap to Unmute</button>
-                <video id="reel-video-2" playsinline muted loop autoplay preload="auto">
-                  <source src="assets/video2.mp4" type="video/mp4">
-                </video>
-                <div class="reel-meta-overlay">
-                  <div class="reel-caption">"Ye video jab bhi play hota hai na Akansha, dil me ek alag sa sukoon bhar jaata hai 🥰✨"</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ==========================================================================
-             APP WINDOW 4: MAPS (2 km Borivali to Dahisar)
-             ========================================================================== -->
-        <div id="app-maps" class="ios-app-window">
-          <div class="app-nav-bar">
-            <button class="app-back-btn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-              <span>Back</span>
-            </button>
-            <div class="app-nav-title">Maps Navigation 📍</div>
-            <span style="font-size: 0.85rem; color: #10b981;">Online</span>
-          </div>
-          <div class="app-body-content">
-            <div class="maps-app-canvas">
-              <svg viewBox="0 0 400 180" style="width: 100%; height: 100%;">
-                <!-- Origin: Borivali -->
-                <circle cx="80" cy="130" r="8" fill="#f5d061"/>
-                <text x="80" y="160" fill="#f5d061" font-size="11" font-weight="700" text-anchor="middle">Rohan (Borivali)</text>
-
-                <!-- Destination: Dahisar -->
-                <circle cx="320" cy="50" r="8" fill="#ff4d8d"/>
-                <text x="320" y="80" fill="#ff4d8d" font-size="11" font-weight="700" text-anchor="middle">Akansha (Dahisar)</text>
-
-                <!-- Connection Arc -->
-                <path id="ios-maps-route" d="M 80 130 Q 200 20 320 50" fill="none" stroke="rgba(255, 77, 141, 0.4)" stroke-width="3" stroke-dasharray="6 6"/>
-
-                <!-- Traveling Heart -->
-                <g>
-                  <path d="M 0 0 C -4 -5 -10 -5 -10 -1 C -10 3 0 10 0 10 C 0 10 10 3 10 -1 C 10 -5 4 -5 0 0 Z" fill="#ff4d8d">
-                    <animateMotion repeatCount="indefinite" dur="3.5s">
-                      <mpath href="#ios-maps-route" />
-                    </animateMotion>
-                  </path>
-                </g>
-              </svg>
-            </div>
-
-            <div class="maps-stat-card">
-              <div>
-                <div style="font-size: 1.15rem; font-weight: 700; color: #fff;">Borivali ⇄ Dahisar</div>
-                <div style="font-size: 0.78rem; color: var(--gold-light);">Via S.V. Road / Local Train (1 Station)</div>
-              </div>
-              <div style="font-size: 1.35rem; font-weight: 800; color: var(--gold-primary);">2.0 km</div>
-            </div>
-
-            <p style="text-align: center; margin-top: 18px; font-size: 0.88rem; color: var(--primary-blush);">
-              "Humare beech sirf 2 km hain, par dil ke beech 0.00 mm! Bas ek kadam ki doori 😄❤️"
-            </p>
-          </div>
-        </div>
-
-        <!-- ==========================================================================
-             APP WINDOW 5: NOTES (Handwritten Letter)
-             ========================================================================== -->
-        <div id="app-notes" class="ios-app-window">
-          <div class="app-nav-bar">
-            <button class="app-back-btn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-              <span>Back</span>
-            </button>
-            <div class="app-nav-title">Notes 📝</div>
-            <span style="font-size: 0.82rem; color: var(--gold-primary);">Private</span>
-          </div>
-          <div class="app-body-content">
-            <div class="notes-paper-container">
-              <h3>Khat-e-Dil: For Akansha</h3>
-              <div class="notes-body-text">
-Meri sabse pyaari Akansha,
-
-Sach kahun toh mujhe nahi pata tha ki Borivali aur black kapdo wali uss choti si baat se shuru hua safar mere dil ke itna kareeb aa jayega.
-
-Hum roz baatein karte hain, calls pe ghanto nikal jaate hain... par har video call ke baad, mera dil sirf tumhari taraf hi kheencha chala gaya.
-
-Log kehte hain ki distance bohot mushkil hota hai. Par Borivali se Dahisar ka faasla toh sirf 2 km aur ek station ka hai! Aur dil ke beech toh 0 doori hai.
-
-Tumhari hansi, tumhari aawaz, tumhara bina wajah baat karte karte muskura dena... mujhe har roz tumse thoda aur pyaar karne pe majboor kar deta hai.
-
-Mujhe nahi pata kal zindagi humein kahan le jayegi, par aaj, iss lamhe me, mera dil 100% sure hai... ki mujhe sirf aur sirf tum chahiye.
-
-Always yours, Rohan
-— Your favourite mummu ❤️ (Software Engineer)
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ==========================================================================
-             APP WINDOW 6: SCRATCH NOTE (Secret Gift)
-             ========================================================================== -->
-        <div id="app-scratch" class="ios-app-window">
-          <div class="app-nav-bar">
-            <button class="app-back-btn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-              <span>Back</span>
-            </button>
-            <div class="app-nav-title">Secret Coupon 🪙</div>
-            <span style="font-size: 0.82rem; color: var(--gold-primary);">Special</span>
-          </div>
-          <div class="app-body-content" style="align-items: center; justify-content: center;">
-            <div class="scratch-box-wrapper">
-              <div class="scratch-secret-body">
-                <div style="font-size: 1.8rem; margin-bottom: 2px;">💖</div>
-                <div style="font-size: 0.72rem; letter-spacing: 2px; color: var(--gold-primary); font-weight: 700;">FOR MY AKANSHA</div>
-                <p>"Borivali me uss black outfit me dekhne ke baad se, tumhara chehra mere dil se utra hi nahi! You are my forever happiness, Akansha 🥰✨"</p>
-                <div style="font-size: 0.8rem; color: var(--primary-blush); font-weight: 600;">— Rohan (Tumhara Favourite Mummu)</div>
-              </div>
-              <canvas id="scratch-ios-canvas" class="scratch-overlay-canvas"></canvas>
-            </div>
-            <p style="font-size: 0.85rem; color: var(--gold-light); text-align: center; margin-top: 10px;">
-              👆 Ungli se rub karke secret padho!
-            </p>
-          </div>
-        </div>
-
-        <!-- ==========================================================================
-             APP WINDOW 7: MUSIC (Now Playing)
-             ========================================================================== -->
-        <div id="app-music" class="ios-app-window">
-          <div class="app-nav-bar">
-            <button class="app-back-btn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-              <span>Back</span>
-            </button>
-            <div class="app-nav-title">Now Playing 🎵</div>
-            <span style="font-size: 0.82rem; color: var(--primary-rose);">Live</span>
-          </div>
-          <div class="app-body-content" style="align-items: center; justify-content: center; text-align: center;">
-            <div style="width: 220px; height: 220px; border-radius: 50%; border: 3px solid var(--gold-primary); overflow: hidden; box-shadow: 0 0 35px var(--gold-glow); margin-bottom: 24px;">
-              <img src="assets/photo2.jpg" alt="Akansha" style="width: 100%; height: 100%; object-fit: cover; animation: spinVinyl 6s linear infinite;">
-            </div>
-            <h3 style="font-size: 1.25rem; font-weight: 700; color: #fff; margin-bottom: 4px;">Dil Ye Bekarar Kyun Hai</h3>
-            <div style="font-size: 0.85rem; color: var(--gold-light); margin-bottom: 24px;">Mohit Chauhan & Shreya Ghoshal</div>
-            <div style="font-size: 0.95rem; color: var(--primary-blush); font-style: italic;">
-              "Is pe mera ikhtiyar kyun hai... jab se tum mili ho Akansha ❤️"
-            </div>
-          </div>
-        </div>
-
-        <!-- ==========================================================================
-             4. FACETIME INCOMING CALL MODAL (The Climax Call!)
-             ========================================================================== -->
-        <div id="facetime-modal-view">
-          <div style="text-align: center;">
-            <div class="facetime-caller-avatar">
-              <img src="assets/photo2.jpg" alt="Rohan">
-            </div>
-            <div class="facetime-caller-name">Rohan Shukla ❤️</div>
-            <div class="facetime-call-type">Your Favourite Mummu is calling via FaceTime...</div>
-          </div>
-
-          <div class="facetime-action-buttons">
-            <button id="btn-facetime-decline" class="facetime-btn btn-facetime-decline" title="Can't decline Mummu!">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.69-1.36-2.67-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg>
-            </button>
-
-            <button id="btn-facetime-accept" class="facetime-btn btn-facetime-accept" title="Answer with love">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 0 0-1.01.24l-1.57 1.97c-2.83-1.44-5.15-3.75-6.59-6.59l1.97-1.57c.26-.26.36-.65.25-1.01A11.36 11.36 0 0 1 8.56 4.4a1 1 0 0 0-1-1H4.4a1 1 0 0 0-1 1C3.4 13.56 10.44 20.6 19.01 20.6a1 1 0 0 0 1-1v-3.22a1 1 0 0 0-1-1z"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- ==========================================================================
-             5. THE PROPOSAL CLIMAX
-             ========================================================================== -->
-        <div id="proposal-climax-view">
-          <div class="proposal-question-box">
-            <div style="font-size: 2.2rem; margin-bottom: 6px;">💍✨</div>
-            <h2 class="proposal-her-name">Akansha Mishra...</h2>
-            <h3 class="proposal-main-q">Kya tum meri girlfriend banogi?</h3>
-            <p class="proposal-english-sub">Will you make me the happiest person and say YES? ❤️</p>
-
-            <div class="proposal-action-buttons">
-              <button id="btn-ios-yes" class="btn-yes-huge">
-                YES! Hamesha ke liye ❤️
-              </button>
-              <button id="btn-ios-no" class="btn-no-runaway">
-                No 🙈
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- ==========================================================================
-             6. CELEBRATION MODAL ON "YES"
-             ========================================================================== -->
-        <div id="celebration-screen-modal">
-          <div class="celebration-card-body">
-            <div style="font-size: 3rem; margin-bottom: 8px;">💍🎉</div>
-            <h2 style="font-family: var(--font-serif); font-size: 1.8rem; font-weight: 800; color: var(--gold-primary); margin-bottom: 4px;">MAINE KAHA THA NA! ❤️</h2>
-            <div style="font-size: 1rem; color: #fff; font-weight: 600; margin-bottom: 12px;">She Said YES! Now you are officially mine!</div>
-
-            <div class="celebration-photos-row">
-              <div class="celebration-thumb" style="transform: rotate(-5deg);">
-                <img src="assets/photo1.jpg" alt="Akansha 1">
-              </div>
-              <div class="celebration-thumb" style="transform: scale(1.1);">
-                <img src="assets/photo2.jpg" alt="Akansha 2">
-              </div>
-              <div class="celebration-thumb" style="transform: rotate(5deg);">
-                <img src="assets/photo3.jpg" alt="Akansha 3">
-              </div>
-            </div>
-
-            <p style="font-size: 0.88rem; color: var(--text-subtle); line-height: 1.5; margin-bottom: 14px;">
-              Ab doori khatam! Borivali se Dahisar sirf 2 km aur 5 minute ka rasta hai, ab to roz milna padega! Take a screenshot & send it to your favourite mummu right now!
-            </p>
-
-            <div class="celebration-signature-badge">
-              ❤️ Handcrafted with endless love by <strong>your favourite mummu</strong><br>
-              <span style="font-size: 0.75rem; color: var(--primary-blush);">(Rohan Shukla — Software Engineer)</span>
-            </div>
-
-            <button id="btn-fireworks-burst-ios" style="margin-top: 14px; width: 100%; padding: 12px; background: linear-gradient(135deg, #f5d061, #ff4d8d); color: #fff; border: none; border-radius: 999px; font-weight: 700; cursor: pointer; box-shadow: 0 8px 25px rgba(245, 208, 97, 0.4);">
-              🎆 Tap for Fireworks Magic! 🎆
-            </button>
-
-            <div>
-              <a href="https://api.whatsapp.com/send?text=Maine%20YES%20bol%20diya%20hai!%20%E2%9D%A4%EF%B8%8F%20Ab%20jaldi%20se%20aao%20aur%20mujhe%20milne%20le%20chalo!%20%F0%9F%A5%B0%E2%9C%A8" target="_blank" class="btn-whatsapp-send">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
-                <span>Send on WhatsApp</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
+      <div class="intro-credit">
+        Coded with ❤️ by <strong>your favourite mummu</strong> (Rohan Shukla — Software Engineer)
       </div>
     </div>
   </div>
 
-  <!-- Config and JS Engine -->
+  <!-- ==========================================================================
+       MAIN APP WRAPPER
+       ========================================================================== -->
+  <div class="quiz-app-container">
+
+    <!-- Top Navigation Header -->
+    <header class="quiz-top-nav">
+      <div class="nav-branding">
+        <span class="nav-heart-logo">❤️</span>
+        <div class="nav-title-group">
+          <div class="nav-main-title">Akansha & Mummu</div>
+          <div class="nav-sub-title">Borivali ⇄ Dahisar (2 km)</div>
+        </div>
+      </div>
+
+      <div class="nav-controls">
+        <!-- Floating Music Controller Pill -->
+        <button id="music-toggle-btn" class="music-pill active" title="Toggle Background Music">
+          <span class="music-note-icon">🎵</span>
+          <div class="music-eq-waves">
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+          </div>
+          <span class="music-label">Dil Ye Bekarar</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Progress Tracker Bar -->
+    <div class="progress-section">
+      <div class="progress-meta">
+        <span class="progress-badge" id="badge-question-num">Question 1 of 30</span>
+        <span class="progress-love-score">Romance Level: <strong id="love-score-txt">100%</strong> 💖</span>
+      </div>
+      <div class="progress-track">
+        <div id="progress-bar-fill" class="progress-fill" style="width: 3.33%;"></div>
+      </div>
+    </div>
+
+    <!-- MAIN INTERACTIVE QUIZ CARD (Aesthetic, Screenshot-Ready) -->
+    <main class="quiz-card-wrapper">
+      <div id="screenshot-target-card" class="quiz-main-card">
+
+        <!-- Card Watermark Header for Screenshots -->
+        <div class="card-screenshot-header">
+          <span class="card-watermark">Akansha Mishra ❤️ Rohan Shukla</span>
+          <span class="card-tag-pill" id="card-category-tag">First Spark ✨</span>
+        </div>
+
+        <!-- Question Number & Prompt -->
+        <div class="card-question-box">
+          <div class="q-number-circle" id="q-circle-num">1</div>
+          <h2 class="q-main-text" id="q-main-text">
+            Pehli baar jab Rohan ne pucha 'Maine aapko Borivali me dekha tha black kapdo me'... tab sach me dimaag me kya aaya tha?
+          </h2>
+        </div>
+
+        <!-- Dynamic Milestone Content (Photos, Videos, Scratch Card) -->
+        <div id="milestone-container" class="milestone-box hidden">
+          <!-- Injected dynamically via JavaScript -->
+        </div>
+
+        <!-- 4 Options Container -->
+        <div class="q-options-grid" id="q-options-container">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Mummu's Reaction Box (Reveals when option is picked) -->
+        <div id="reaction-box" class="mummu-reaction-card hidden">
+          <div class="reaction-avatar-row">
+            <span class="reaction-avatar">🥰</span>
+            <span class="reaction-author">Mummu says:</span>
+          </div>
+          <p id="reaction-text" class="reaction-message">
+            Sach bolun toh uss black dress me tum itni khoobsurat lag rahi thin ki nazar hatana namumkin tha! ✨
+          </p>
+        </div>
+
+        <!-- Screenshot & WhatsApp Send Strip (Har sawal ka SS bhejna hai!) -->
+        <div id="screenshot-action-strip" class="screenshot-strip hidden">
+          <div class="ss-prompt-tag">
+            📸 <strong>Har sawal ka Screenshot Mummu ko bhejo!</strong>
+          </div>
+          <div class="ss-action-btns">
+            <button id="btn-copy-answer" class="btn-ss-action btn-copy">
+              <span>📋 Copy Answer</span>
+            </button>
+            <a id="btn-whatsapp-answer" href="#" target="_blank" class="btn-ss-action btn-wa">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+              <span>📲 Send on WhatsApp</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Card Footer Watermark -->
+        <div class="card-footer-watermark">
+          <span>Your Favourite Mummu • Software Engineer</span>
+          <span>📍 2 km Distance</span>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Bottom Navigation Controls -->
+    <footer class="quiz-bottom-nav">
+      <button id="btn-prev-q" class="nav-btn btn-prev" disabled>
+        <span>⬅️ Previous</span>
+      </button>
+
+      <!-- Jumper / Counter Indicator -->
+      <div class="nav-center-counter">
+        <span id="counter-current">1</span> / 30
+      </div>
+
+      <button id="btn-next-q" class="nav-btn btn-next">
+        <span>Next Question ➡️</span>
+      </button>
+    </footer>
+
+  </div>
+
+  <!-- ==========================================================================
+       PROPOSAL CLIMAX MODAL (QUESTION 30 FINALE)
+       ========================================================================== -->
+  <div id="proposal-modal" class="proposal-overlay hidden">
+    <div class="proposal-box">
+      <div class="proposal-ring-icon">💍✨</div>
+      <div class="proposal-mini-tag">QUESTION 30: THE GRAND FINALE</div>
+      
+      <h2 class="proposal-title">Akansha Mishra...</h2>
+      <p class="proposal-speech">
+        Borivali me uss black outfit me dekhne se lekar, Dahisar ki 2 km ki doori tak...<br>
+        Aur late-night calls se lekar har ek muskaan tak, mera dil sirf aur sirf tumhara ho chuka hai.
+      </p>
+
+      <div class="proposal-highlight-question">
+        Kya tum Rohan Shukla (tumhare favourite Mummu) ki Girlfriend banogi?<br>
+        <span>Will you be mine forever? ❤️</span>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="proposal-btn-container">
+        <button id="btn-proposal-yes" class="btn-yes-huge">
+          <span>YES! 1000 Baar YES! Hamesha ke liye tumhari ❤️💍</span>
+        </button>
+        <button id="btn-proposal-no" class="btn-no-runaway">
+          <span>No 🙈</span>
+        </button>
+      </div>
+
+      <div class="proposal-mummu-sign">
+        — Rohan Shukla (Your Favourite Mummu)
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       GRAND CELEBRATION MODAL (AFTER SHE SAYS YES!)
+       ========================================================================== -->
+  <div id="celebration-modal" class="celebration-overlay hidden">
+    <div class="celebration-card">
+      <div class="celebration-firework-icon">🎆🎉</div>
+      <div class="celebration-badge">OFFICIALLY TOGETHER FOREVER</div>
+      <h1 class="celebration-heading">SHE SAID YES! ❤️</h1>
+      <p class="celebration-subheading">MAINE KAHA THA NA! Dil toh pehle se tumhara tha!</p>
+
+      <!-- Photos Trio -->
+      <div class="celebration-photos-strip">
+        <div class="celeb-photo-wrapper tilt-left">
+          <img src="assets/photo1.jpg" alt="Akansha 1">
+        </div>
+        <div class="celeb-photo-wrapper center-pop">
+          <img src="assets/photo2.jpg" alt="Akansha 2">
+        </div>
+        <div class="celeb-photo-wrapper tilt-right">
+          <img src="assets/photo3.jpg" alt="Akansha 3">
+        </div>
+      </div>
+
+      <div class="celebration-body-text">
+        <p>
+          Ab doori officially khatam! Borivali se Dahisar sirf <strong>2 km</strong> aur 5 minute ka rasta hai, ab toh roz milna padega! 🥰
+        </p>
+        <p style="font-weight: 600; color: var(--gold-primary);">
+          📸 Is celebration screen ka screenshot leke apne favourite Mummu ko abhi bhejo!
+        </p>
+      </div>
+
+      <!-- Creator Highlight Credit -->
+      <div class="celebration-engineer-credit">
+        ❤️ Handcrafted with endless love by <strong>your favourite mummu</strong><br>
+        <span class="engineer-title">(Rohan Shukla — Software Engineer)</span>
+      </div>
+
+      <!-- Celebration Actions -->
+      <div class="celebration-actions-row">
+        <button id="btn-more-fireworks" class="btn-celeb-fireworks">
+          <span>🎆 More Fireworks & Hearts! 🎆</span>
+        </button>
+        <a id="btn-whatsapp-final" href="https://api.whatsapp.com/send?text=Maine%20YES%20bol%20diya%20hai!%20%E2%9D%A4%EF%B8%8F%20Ab%20jaldi%20se%20Dahisar%20aao%20aur%20mujhe%20milne%20le%20chalo!%20%F0%9F%A5%B0%E2%9C%A8" target="_blank" class="btn-celeb-whatsapp">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+          <span>Send Final YES on WhatsApp</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scripts -->
   <script src="config.js"></script>
   <script src="script.js"></script>
 </body>

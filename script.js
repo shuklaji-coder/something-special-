@@ -1,62 +1,58 @@
 /**
- * ==========================================================================
- *  AKANSHA OS 18.0 - INTERACTIVE JAVASCRIPT ENGINE
+ * ====================================================================
+ *  AKANSHA & MUMMU - 30 ROMANTIC QUESTIONS QUIZ JAVASCRIPT ENGINE
  *  Handcrafted with Love by Rohan Shukla (Software Engineer)
- * ==========================================================================
+ * ====================================================================
  */
 
 (function () {
   'use strict';
 
-  const CFG = window.STORY_CONFIG || {};
+  const CFG = window.QUIZ_CONFIG || {};
+  const questions = CFG.questions || [];
 
   // Audio References
-  const bgAudio = document.getElementById('bg-audio-tag') || new Audio(CFG.audio?.src || 'assets/bg_music.mp3');
+  const bgAudio = document.getElementById('quiz-bg-audio') || new Audio(CFG.audioSrc || 'assets/bg_music.mp3');
   bgAudio.loop = true;
   bgAudio.preload = 'auto';
   let isMusicPlaying = false;
   let audioContext = null;
 
   // DOM Elements
-  const bootScreen = document.getElementById('boot-screen');
-  const bootProgressFill = document.getElementById('boot-progress-fill');
-  const bootUnlockBtn = document.getElementById('boot-unlock-btn');
-  const lockscreenView = document.getElementById('lockscreen-view');
-  const lockNotifBanner = document.getElementById('lock-notif-banner');
-  const lockSwipeBtn = document.getElementById('lock-swipe-btn');
-  const dynamicIsland = document.getElementById('dynamic-island');
-  const facetimeModal = document.getElementById('facetime-modal-view');
-  const proposalClimaxView = document.getElementById('proposal-climax-view');
-  const celebrationModal = document.getElementById('celebration-screen-modal');
+  const introModal = document.getElementById('intro-modal');
+  const btnStartQuiz = document.getElementById('btn-start-quiz');
+  const musicToggleBtn = document.getElementById('music-toggle-btn');
+  const badgeQuestionNum = document.getElementById('badge-question-num');
+  const loveScoreTxt = document.getElementById('love-score-txt');
+  const progressBarFill = document.getElementById('progress-bar-fill');
+  const cardCategoryTag = document.getElementById('card-category-tag');
+  const qCircleNum = document.getElementById('q-circle-num');
+  const qMainText = document.getElementById('q-main-text');
+  const milestoneContainer = document.getElementById('milestone-container');
+  const qOptionsContainer = document.getElementById('q-options-container');
+  const reactionBox = document.getElementById('reaction-box');
+  const reactionText = document.getElementById('reaction-text');
+  const screenshotActionStrip = document.getElementById('screenshot-action-strip');
+  const btnCopyAnswer = document.getElementById('btn-copy-answer');
+  const btnWhatsappAnswer = document.getElementById('btn-whatsapp-answer');
+  const btnPrevQ = document.getElementById('btn-prev-q');
+  const btnNextQ = document.getElementById('btn-next-q');
+  const counterCurrent = document.getElementById('counter-current');
+
+  // Proposal & Celebration Elements
+  const proposalModal = document.getElementById('proposal-modal');
+  const btnProposalYes = document.getElementById('btn-proposal-yes');
+  const btnProposalNo = document.getElementById('btn-proposal-no');
+  const celebrationModal = document.getElementById('celebration-modal');
   const flashOverlay = document.getElementById('flash-overlay');
+  const btnMoreFireworks = document.getElementById('btn-more-fireworks');
+
+  // Quiz State
+  let currentIndex = 0;
+  const userAnswers = {}; // { questionId: { optionIndex: number, text: string } }
 
   /* ==========================================================================
-     0. LIVE TIME & CLOCK
-     ========================================================================== */
-  function updateLiveClock() {
-    const now = new Date();
-    let hours = now.getHours();
-    let mins = now.getMinutes();
-    mins = mins < 10 ? '0' + mins : mins;
-    const timeStr = `${hours}:${mins}`;
-
-    const statusClock = document.getElementById('status-clock');
-    const lockClock = document.getElementById('lock-clock');
-    if (statusClock) statusClock.textContent = timeStr;
-    if (lockClock) lockClock.textContent = timeStr;
-
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    const lockDate = document.getElementById('lock-date');
-    if (lockDate) {
-      lockDate.textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
-    }
-  }
-  setInterval(updateLiveClock, 1000);
-  updateLiveClock();
-
-  /* ==========================================================================
-     1. AUDIO ENGINE & UNLOCK ON FIRST MOMENT
+     1. AUDIO ENGINE & UNLOCK ON FIRST USER INTERACTION
      ========================================================================== */
   function initAudioContext() {
     if (!audioContext) {
@@ -78,7 +74,6 @@
         isMusicPlaying = true;
         updateMusicUI();
       }).catch(() => {
-        // Muted fallback
         bgAudio.muted = true;
         bgAudio.play().then(() => {
           setupUnmuteTrigger();
@@ -95,19 +90,19 @@
       bgAudio.volume = 0.85;
       isMusicPlaying = true;
       updateMusicUI();
-      ['pointerdown', 'touchstart', 'touchend', 'mousedown', 'mousemove', 'scroll', 'wheel', 'keydown', 'click'].forEach((evt) => {
+      ['pointerdown', 'touchstart', 'touchend', 'mousedown', 'scroll', 'click'].forEach((evt) => {
         window.removeEventListener(evt, unmute, { capture: true });
         document.removeEventListener(evt, unmute, { capture: true });
       });
     };
-    ['pointerdown', 'touchstart', 'touchend', 'mousedown', 'mousemove', 'scroll', 'wheel', 'keydown', 'click'].forEach((evt) => {
+    ['pointerdown', 'touchstart', 'touchend', 'mousedown', 'scroll', 'click'].forEach((evt) => {
       window.addEventListener(evt, unmute, { capture: true, once: true });
       document.addEventListener(evt, unmute, { capture: true, once: true });
     });
   }
 
   function setupGlobalAudioTriggers() {
-    const gestureEvents = ['pointerdown', 'touchstart', 'touchend', 'mousedown', 'mousemove', 'scroll', 'wheel', 'keydown', 'click'];
+    const gestureEvents = ['pointerdown', 'touchstart', 'touchend', 'mousedown', 'scroll', 'click'];
     function triggerStart() {
       initAudioContext();
       bgAudio.muted = false;
@@ -131,179 +126,262 @@
   }
 
   function updateMusicUI() {
-    document.body.classList.toggle('music-playing', isMusicPlaying);
+    if (musicToggleBtn) {
+      if (isMusicPlaying) {
+        musicToggleBtn.classList.add('active');
+      } else {
+        musicToggleBtn.classList.remove('active');
+      }
+    }
   }
 
+  if (musicToggleBtn) {
+    musicToggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      initAudioContext();
+      if (isMusicPlaying) {
+        bgAudio.pause();
+        isMusicPlaying = false;
+      } else {
+        bgAudio.muted = false;
+        bgAudio.play();
+        isMusicPlaying = true;
+      }
+      updateMusicUI();
+    });
+  }
+
+  // Play music immediately + set fallback listeners
   playMusic();
   setupGlobalAudioTriggers();
 
-  // Dynamic Island Click to expand/collapse
-  if (dynamicIsland) {
-    dynamicIsland.addEventListener('click', (e) => {
-      e.stopPropagation();
-      dynamicIsland.classList.toggle('expanded');
+  // Intro Start Button Click
+  if (btnStartQuiz) {
+    btnStartQuiz.addEventListener('click', () => {
+      playMusic();
+      if (introModal) introModal.classList.add('hidden');
     });
   }
 
   /* ==========================================================================
-     2. BOOT SCREEN & UNLOCK TRANSITIONS
+     2. QUIZ ENGINE & RENDERING (30 Questions)
      ========================================================================== */
-  let bootProgress = 0;
-  const bootInterval = setInterval(() => {
-    bootProgress += Math.floor(Math.random() * 8) + 5;
-    if (bootProgress >= 100) {
-      bootProgress = 100;
-      clearInterval(bootInterval);
-      if (bootProgressFill) bootProgressFill.style.width = '100%';
-      if (bootUnlockBtn) bootUnlockBtn.style.display = 'inline-flex';
-    } else {
-      if (bootProgressFill) bootProgressFill.style.width = bootProgress + '%';
+  function renderQuestion(index) {
+    if (index < 0 || index >= questions.length) return;
+    const q = questions[index];
+
+    // If Question 30 (Proposal Climax)
+    if (q.type === 'proposal-climax' || index === 29) {
+      openProposalModal();
+      return;
     }
-  }, 50);
 
-  function unlockFromBoot() {
-    playMusic();
-    if (bootScreen) bootScreen.classList.add('hidden');
-  }
+    // Update Headers & Counter
+    const qNum = index + 1;
+    if (badgeQuestionNum) badgeQuestionNum.textContent = `Question ${qNum} of 30`;
+    if (counterCurrent) counterCurrent.textContent = qNum;
+    if (cardCategoryTag) cardCategoryTag.textContent = q.category || 'Love Quiz ✨';
+    if (qCircleNum) qCircleNum.textContent = qNum;
+    if (qMainText) qMainText.textContent = q.question;
 
-  if (bootUnlockBtn) bootUnlockBtn.addEventListener('click', unlockFromBoot);
-  if (bootScreen) bootScreen.addEventListener('click', unlockFromBoot);
+    // Progress Bar Fill & Love Score
+    const percent = ((qNum) / 30) * 100;
+    if (progressBarFill) progressBarFill.style.width = `${percent}%`;
+    const scoreVal = Math.min(100, Math.round(percent + (Object.keys(userAnswers).length > 5 ? 10 : 0)));
+    if (loveScoreTxt) loveScoreTxt.textContent = `${scoreVal}%`;
 
-  function unlockToHomescreen() {
-    playMusic();
-    if (lockscreenView) lockscreenView.classList.add('unlocked');
-  }
+    // Milestone Handling
+    renderMilestone(q);
 
-  if (lockSwipeBtn) lockSwipeBtn.addEventListener('click', unlockToHomescreen);
-  if (lockNotifBanner) {
-    lockNotifBanner.addEventListener('click', () => {
-      unlockToHomescreen();
-      openApp('app-messages');
-    });
-  }
+    // Render Options
+    if (qOptionsContainer) {
+      qOptionsContainer.innerHTML = '';
+      const letters = ['A', 'B', 'C', 'D'];
+      const currentSelected = userAnswers[q.id];
 
-  /* ==========================================================================
-     3. APP WINDOW NAVIGATION
-     ========================================================================== */
-  function openApp(appId) {
-    playMusic();
-    const appWindow = document.getElementById(appId);
-    if (appWindow) {
-      appWindow.classList.add('open');
-      if (appId === 'app-messages') {
-        startChatSimulation();
-      }
-      if (appId === 'app-scratch') {
-        setTimeout(initScratchCard, 200);
-      }
-    }
-  }
+      q.options.forEach((optText, optIdx) => {
+        const btn = document.createElement('button');
+        btn.className = 'q-option-btn';
+        if (currentSelected && currentSelected.optionIndex === optIdx) {
+          btn.classList.add('selected');
+        }
 
-  function closeApp(appWindow) {
-    if (appWindow) {
-      appWindow.classList.remove('open');
-    }
-  }
-
-  document.querySelectorAll('.ios-app-item[data-app]').forEach((item) => {
-    item.addEventListener('click', () => {
-      const appId = item.getAttribute('data-app');
-      openApp(appId);
-    });
-  });
-
-  const homeFeatureWidget = document.querySelector('.home-feature-widget');
-  if (homeFeatureWidget) {
-    homeFeatureWidget.addEventListener('click', () => {
-      openApp('app-maps');
-    });
-  }
-
-  document.querySelectorAll('.app-back-btn').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const parentWindow = btn.closest('.ios-app-window');
-      closeApp(parentWindow);
-    });
-  });
-
-  /* ==========================================================================
-     4. MESSAGES APP: BORIVALI CHAT REPLAY
-     ========================================================================== */
-  const chatStream = document.getElementById('chat-stream-ios');
-  const chatTypingIndicator = document.getElementById('chat-typing-bubble');
-  const chatReplayAction = document.getElementById('chat-replay-action');
-  const messages = CFG.chatMessages || [];
-  let chatRunning = false;
-
-  function startChatSimulation() {
-    if (!chatStream || chatRunning) return;
-    chatRunning = true;
-    chatStream.innerHTML = '';
-    if (chatTypingIndicator) chatTypingIndicator.classList.remove('active');
-
-    let currentMsgIdx = 0;
-
-    function renderNextMessage() {
-      if (currentMsgIdx >= messages.length) {
-        chatRunning = false;
-        if (chatTypingIndicator) chatTypingIndicator.classList.remove('active');
-        return;
-      }
-
-      const msg = messages[currentMsgIdx];
-      const isHer = msg.sender === 'her';
-
-      if (isHer && chatTypingIndicator) {
-        chatTypingIndicator.classList.add('active');
-        chatStream.scrollTop = chatStream.scrollHeight;
-      }
-
-      const delay = isHer ? 1200 : 750;
-
-      setTimeout(() => {
-        if (chatTypingIndicator) chatTypingIndicator.classList.remove('active');
-
-        const bubble = document.createElement('div');
-        bubble.className = `ios-chat-bubble ${msg.sender}`;
-        bubble.innerHTML = `
-          <div>${msg.text}</div>
-          <span style="display:block; font-size:0.65rem; color:rgba(255,255,255,0.6); margin-top:3px; text-align:right;">${msg.time}</span>
+        btn.innerHTML = `
+          <div class="option-badge">${letters[optIdx] || '•'}</div>
+          <div class="option-text">${optText}</div>
         `;
-        chatStream.appendChild(bubble);
 
-        requestAnimationFrame(() => {
-          bubble.classList.add('visible');
-          chatStream.scrollTop = chatStream.scrollHeight;
+        btn.addEventListener('click', () => {
+          handleOptionSelect(q, optIdx, optText);
         });
 
-        currentMsgIdx++;
-        setTimeout(renderNextMessage, 700);
-      }, delay);
+        qOptionsContainer.appendChild(btn);
+      });
     }
 
-    renderNextMessage();
+    // Reaction Box & Screenshot Strip State
+    if (userAnswers[q.id]) {
+      showReactionAndScreenshot(q, userAnswers[q.id].text);
+    } else {
+      if (reactionBox) reactionBox.classList.add('hidden');
+      if (screenshotActionStrip) screenshotActionStrip.classList.add('hidden');
+    }
+
+    // Update Navigation Buttons
+    if (btnPrevQ) btnPrevQ.disabled = (index === 0);
+    if (btnNextQ) {
+      btnNextQ.innerHTML = (index === 28) ? 'Question 30: Grand Finale 💍' : 'Next Question ➡️';
+    }
+
+    // Scroll card smoothly into view
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  if (chatReplayAction) {
-    chatReplayAction.addEventListener('click', () => {
-      chatRunning = false;
-      startChatSimulation();
-    });
+  function handleOptionSelect(q, optIdx, optText) {
+    userAnswers[q.id] = { optionIndex: optIdx, text: optText };
+
+    // Update active class on options
+    if (qOptionsContainer) {
+      const allButtons = qOptionsContainer.querySelectorAll('.q-option-btn');
+      allButtons.forEach((b, i) => {
+        b.classList.toggle('selected', i === optIdx);
+      });
+    }
+
+    // Mini confetti burst
+    if (typeof confetti === 'function') {
+      confetti({
+        particleCount: 20,
+        spread: 60,
+        origin: { y: 0.7 },
+        colors: ['#ff4d8d', '#f5d061', '#ffffff']
+      });
+    }
+
+    // Vibrate gently if supported
+    if ('vibrate' in navigator) {
+      try { navigator.vibrate(30); } catch (e) {}
+    }
+
+    showReactionAndScreenshot(q, optText);
+  }
+
+  function showReactionAndScreenshot(q, selectedAnswerText) {
+    // Show Mummu's reaction
+    if (reactionBox && reactionText) {
+      reactionText.textContent = q.mummuReaction || "Sach bolun toh tumhara ye answer sunke dil khush ho gaya! ❤️";
+      reactionBox.classList.remove('hidden');
+    }
+
+    // Show Screenshot & WhatsApp Strip
+    if (screenshotActionStrip) {
+      screenshotActionStrip.classList.remove('hidden');
+
+      // WhatsApp formatted message
+      if (btnWhatsappAnswer) {
+        const waMsg = `Mummu! Maine Question ${q.id} ka answer diya:\n"${selectedAnswerText}"\n❤️ (Borivali ⇄ Dahisar)`;
+        btnWhatsappAnswer.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(waMsg)}`;
+      }
+
+      // Copy Answer Button
+      if (btnCopyAnswer) {
+        btnCopyAnswer.onclick = () => {
+          const copyMsg = `Question ${q.id}: ${q.question}\nAkansha's Answer: "${selectedAnswerText}"\n❤️ Specially for Mummu!`;
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(copyMsg).then(() => {
+              btnCopyAnswer.innerHTML = '<span>✅ Copied! Ab SS leke bhejo 📸</span>';
+              setTimeout(() => {
+                btnCopyAnswer.innerHTML = '<span>📋 Copy Answer</span>';
+              }, 2500);
+            });
+          }
+        };
+      }
+    }
   }
 
   /* ==========================================================================
-     5. REELS APP: VIDEO CONTROLS
+     3. MILESTONE EMBEDS (Photos, Videos, Scratch Card)
      ========================================================================== */
-  function setupReel(vidId, btnClass) {
-    const vid = document.getElementById(vidId);
-    const btn = document.querySelector('.' + btnClass);
+  function renderMilestone(q) {
+    if (!milestoneContainer) return;
+    milestoneContainer.innerHTML = '';
+
+    if (q.type === 'photo-milestone') {
+      milestoneContainer.classList.remove('hidden');
+      milestoneContainer.innerHTML = `
+        <div class="photos-milestone-grid">
+          <div class="milestone-photo-card hero-photo">
+            <img src="${CFG.media?.photo2 || 'assets/photo2.jpg'}" alt="Akansha Portrait">
+          </div>
+          <div class="milestone-photo-card">
+            <img src="${CFG.media?.photo1 || 'assets/photo1.jpg'}" alt="Akansha Smiling">
+          </div>
+          <div class="milestone-photo-card">
+            <img src="${CFG.media?.photo2 || 'assets/photo2.jpg'}" alt="Akansha Close-up">
+          </div>
+          <div class="milestone-photo-card">
+            <img src="${CFG.media?.photo3 || 'assets/photo3.jpg'}" alt="Akansha Elegance">
+          </div>
+        </div>
+      `;
+    } else if (q.type === 'video1-milestone') {
+      milestoneContainer.classList.remove('hidden');
+      milestoneContainer.innerHTML = `
+        <div class="video-milestone-wrapper">
+          <button id="unmute-vid-1" class="video-unmute-btn">🔊 Tap to Unmute</button>
+          <video id="milestone-vid-1" playsinline muted loop autoplay preload="auto">
+            <source src="${CFG.media?.video1 || 'assets/video.mp4'}" type="video/mp4">
+          </video>
+        </div>
+      `;
+      setupMilestoneVideo('milestone-vid-1', 'unmute-vid-1');
+    } else if (q.type === 'video2-milestone') {
+      milestoneContainer.classList.remove('hidden');
+      milestoneContainer.innerHTML = `
+        <div class="video-milestone-wrapper">
+          <button id="unmute-vid-2" class="video-unmute-btn">🔊 Tap to Unmute</button>
+          <video id="milestone-vid-2" playsinline muted loop autoplay preload="auto">
+            <source src="${CFG.media?.video2 || 'assets/video2.mp4'}" type="video/mp4">
+          </video>
+        </div>
+      `;
+      setupMilestoneVideo('milestone-vid-2', 'unmute-vid-2');
+    } else if (q.type === 'scratch-milestone') {
+      milestoneContainer.classList.remove('hidden');
+      milestoneContainer.innerHTML = `
+        <div class="scratch-milestone-wrapper">
+          <div class="scratch-secret-content">
+            <h4>✨ FOR MY FOREVER AKANSHA ✨</h4>
+            <p>"Borivali me uss black outfit me dekhne ke baad se, tumhara chehra mere dil se utra hi nahi! You are my forever happiness, Akansha 🥰✨"</p>
+            <div style="font-size:0.75rem; color:var(--gold-primary); margin-top:4px;">— Rohan (Your Favourite Mummu)</div>
+          </div>
+          <canvas id="scratch-canvas" class="scratch-canvas-overlay"></canvas>
+        </div>
+        <div style="text-align:center; font-size:0.78rem; color:var(--gold-light); margin-bottom:10px;">
+          👆 Ungli ya mouse se gold layer ko scratch karo!
+        </div>
+      `;
+      setTimeout(initScratchCard, 100);
+    } else {
+      milestoneContainer.classList.add('hidden');
+    }
+  }
+
+  function setupMilestoneVideo(videoId, btnId) {
+    const vid = document.getElementById(videoId);
+    const btn = document.getElementById(btnId);
     if (!vid || !btn) return;
 
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       vid.muted = !vid.muted;
       btn.textContent = vid.muted ? '🔊 Tap to Unmute' : '🔇 Mute Video';
-      if (!vid.muted && bgAudio) bgAudio.volume = 0.2;
+      if (!vid.muted && bgAudio) {
+        bgAudio.volume = 0.25;
+      } else if (bgAudio) {
+        bgAudio.volume = 0.85;
+      }
     });
 
     vid.addEventListener('click', () => {
@@ -311,14 +389,9 @@
       else vid.pause();
     });
   }
-  setupReel('reel-video-1', 'reel-unmute-1');
-  setupReel('reel-video-2', 'reel-unmute-2');
 
-  /* ==========================================================================
-     6. SCRATCH CARD ENGINE (Secret Note)
-     ========================================================================== */
   function initScratchCard() {
-    const canvas = document.getElementById('scratch-ios-canvas');
+    const canvas = document.getElementById('scratch-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const container = canvas.parentElement;
@@ -341,22 +414,23 @@
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
-    for (let i = 0; i < 35; i++) {
+    // Decorative sparkles
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+    for (let i = 0; i < 30; i++) {
       ctx.beginPath();
       ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 3 + 1, 0, Math.PI * 2);
       ctx.fill();
     }
 
     ctx.fillStyle = '#260e22';
-    ctx.font = 'bold 15px sans-serif';
+    ctx.font = 'bold 14px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('✨ 🪙 Scratch Karo Akansha! 🪙 ✨', canvas.width / 2, canvas.height / 2 - 8);
+    ctx.fillText('✨ 🪙 Scratch Karo Akansha! 🪙 ✨', canvas.width / 2, canvas.height / 2 - 6);
 
-    ctx.font = '12px sans-serif';
+    ctx.font = '11px sans-serif';
     ctx.fillStyle = '#42163b';
-    ctx.fillText('(Rub with your finger or mouse)', canvas.width / 2, canvas.height / 2 + 16);
+    ctx.fillText('(Rub with finger or mouse)', canvas.width / 2, canvas.height / 2 + 14);
 
     function scratch(e) {
       if (!isDrawing || isRevealed) return;
@@ -369,7 +443,7 @@
 
       ctx.globalCompositeOperation = 'destination-out';
       ctx.beginPath();
-      ctx.arc(x, y, 26, 0, Math.PI * 2);
+      ctx.arc(x, y, 24, 0, Math.PI * 2);
       ctx.fill();
 
       checkPercent();
@@ -396,8 +470,8 @@
         canvas.style.pointerEvents = 'none';
         if (typeof confetti === 'function') {
           confetti({
-            particleCount: 40,
-            spread: 70,
+            particleCount: 50,
+            spread: 80,
             origin: { y: 0.6 },
             colors: ['#ff4d8d', '#f5d061', '#ffffff']
           });
@@ -414,86 +488,45 @@
     canvas.addEventListener('touchend', () => { isDrawing = false; });
   }
 
-  /* ==========================================================================
-     7. FACETIME INCOMING CALL & PROPOSAL CLIMAX
-     ========================================================================== */
-  function triggerFaceTimeCall() {
-    initAudioContext();
-    if (facetimeModal) {
-      facetimeModal.classList.add('ringing');
-      playFaceTimeRingtone();
-    }
-  }
-
-  const appTriggerFacetime = document.getElementById('app-trigger-facetime');
-  const dockFacetimeBtn = document.getElementById('dock-facetime-btn');
-  if (appTriggerFacetime) appTriggerFacetime.addEventListener('click', triggerFaceTimeCall);
-  if (dockFacetimeBtn) dockFacetimeBtn.addEventListener('click', triggerFaceTimeCall);
-
-  // Synthesized FaceTime Ringtone
-  let ringInterval = null;
-  function playFaceTimeRingtone() {
-    function chimes() {
-      if (!audioContext) return;
-      try {
-        const osc = audioContext.createOscillator();
-        const gain = audioContext.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(800, audioContext.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.3);
-        gain.gain.setValueAtTime(0.08, audioContext.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.32);
-        osc.connect(gain);
-        gain.connect(audioContext.destination);
-        osc.start();
-        osc.stop(audioContext.currentTime + 0.35);
-      } catch (e) {}
-    }
-    chimes();
-    ringInterval = setInterval(chimes, 2000);
-  }
-
-  function stopFaceTimeRingtone() {
-    if (ringInterval) {
-      clearInterval(ringInterval);
-      ringInterval = null;
-    }
-  }
-
-  // Decline button playfully runs away / rejects
-  const btnFacetimeDecline = document.getElementById('btn-facetime-decline');
-  if (btnFacetimeDecline) {
-    btnFacetimeDecline.addEventListener('click', (e) => {
-      e.stopPropagation();
-      alert("🙈 Aise Mummu ki call decline nahi kar sakte! Pehle suno toh sahi!");
+  // Previous & Next Button Listeners
+  if (btnPrevQ) {
+    btnPrevQ.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion(currentIndex);
+      }
     });
   }
 
-  // Accept FaceTime Call -> Transitions into Proposal
-  const btnFacetimeAccept = document.getElementById('btn-facetime-accept');
-  if (btnFacetimeAccept) {
-    btnFacetimeAccept.addEventListener('click', () => {
-      stopFaceTimeRingtone();
-      if (facetimeModal) facetimeModal.classList.remove('ringing');
-      if (proposalClimaxView) proposalClimaxView.classList.add('active');
+  if (btnNextQ) {
+    btnNextQ.addEventListener('click', () => {
+      if (currentIndex < questions.length - 1) {
+        currentIndex++;
+        renderQuestion(currentIndex);
+      } else {
+        openProposalModal();
+      }
     });
   }
 
   /* ==========================================================================
-     8. PROPOSAL RUNAWAY NO BUTTON & YES CELEBRATION
+     4. QUESTION 30: THE GRAND FINALE PROPOSAL CLIMAX
      ========================================================================== */
-  const btnIosYes = document.getElementById('btn-ios-yes');
-  const btnIosNo = document.getElementById('btn-ios-no');
+  function openProposalModal() {
+    if (proposalModal) {
+      proposalModal.classList.remove('hidden');
+    }
+  }
 
-  const noResponses = CFG.proposal?.noResponses || [
+  const noResponses = [
     "No 🙈",
     "Are you sure? 🥺",
     "Ek baar aur soch lo...",
-    "Pakka? Dil toot jayega mera 💔",
-    "Aise mat karo na please...",
-    "Main sach me ro dunga 😭",
+    "Pakka? Mummu ro dega 😭",
     "Galat button dab gaya shayad?",
-    "Ab toh YES hi dabana padega! 😏"
+    "Aise mat karo na please...",
+    "Ab toh YES hi dabana padega! 😏",
+    "Mummu sirf tumhara hai! ❤️"
   ];
 
   let noAttemptCount = 0;
@@ -507,83 +540,83 @@
     noAttemptCount++;
 
     if ('vibrate' in navigator) {
-      try { navigator.vibrate([35, 50, 35]); } catch (err) {}
+      try { navigator.vibrate([30, 40, 30]); } catch (err) {}
     }
 
-    const box = document.querySelector('.proposal-question-box');
-    if (box && btnIosNo) {
+    const box = document.querySelector('.proposal-box');
+    if (box && btnProposalNo) {
       const boxRect = box.getBoundingClientRect();
-      const btnRect = btnIosNo.getBoundingClientRect();
+      const btnRect = btnProposalNo.getBoundingClientRect();
 
-      const maxX = boxRect.width - btnRect.width - 30;
+      const maxX = boxRect.width - btnRect.width - 40;
       const randomX = (Math.random() - 0.5) * maxX;
       const randomY = (Math.random() - 0.5) * 80;
 
       const shrinkFactor = Math.max(0.65, 1 - noAttemptCount * 0.05);
 
-      btnIosNo.style.position = 'relative';
-      btnIosNo.style.transform = `translate(${randomX}px, ${randomY}px) scale(${shrinkFactor})`;
+      btnProposalNo.style.position = 'relative';
+      btnProposalNo.style.transform = `translate(${randomX}px, ${randomY}px) scale(${shrinkFactor})`;
 
       const nextTextIndex = Math.min(noAttemptCount, noResponses.length - 1);
-      btnIosNo.textContent = noResponses[nextTextIndex];
+      btnProposalNo.textContent = noResponses[nextTextIndex];
 
       yesScale += 0.08;
-      if (btnIosYes) {
-        btnIosYes.style.transform = `scale(${yesScale})`;
-        btnIosYes.style.boxShadow = `0 15px ${35 + noAttemptCount * 5}px rgba(255, 77, 141, 0.7)`;
+      if (btnProposalYes) {
+        btnProposalYes.style.transform = `scale(${yesScale})`;
+        btnProposalYes.style.boxShadow = `0 15px ${35 + noAttemptCount * 6}px rgba(255, 77, 141, 0.8)`;
       }
 
       if (noAttemptCount >= 8) {
-        btnIosNo.style.display = 'none';
+        btnProposalNo.style.display = 'none';
       }
     }
   }
 
-  if (btnIosNo) {
-    btnIosNo.addEventListener('mouseenter', evadeNoButton);
-    btnIosNo.addEventListener('touchstart', evadeNoButton, { passive: false });
-    btnIosNo.addEventListener('click', evadeNoButton);
+  if (btnProposalNo) {
+    btnProposalNo.addEventListener('mouseenter', evadeNoButton);
+    btnProposalNo.addEventListener('touchstart', evadeNoButton, { passive: false });
+    btnProposalNo.addEventListener('click', evadeNoButton);
   }
 
-  /* ==========================================================================
-     9. YES BUTTON: GRAND FIREWORKS & CELEBRATION
-     ========================================================================== */
-  function triggerCelebration() {
-    if (flashOverlay) {
-      flashOverlay.classList.add('active');
-      setTimeout(() => flashOverlay.classList.remove('active'), 400);
-    }
+  if (btnProposalYes) {
+    btnProposalYes.addEventListener('click', () => {
+      // Camera Flash
+      if (flashOverlay) {
+        flashOverlay.classList.add('active');
+        setTimeout(() => flashOverlay.classList.remove('active'), 400);
+      }
 
-    // 5-Rocket Salute
-    launchRocket(fwWidth * 0.2, fwHeight * 0.3, 'heart');
-    launchRocket(fwWidth * 0.5, fwHeight * 0.22, 'heart');
-    launchRocket(fwWidth * 0.8, fwHeight * 0.32, 'heart');
-    setTimeout(() => {
-      launchRocket(fwWidth * 0.35, fwHeight * 0.28, 'peony');
-      launchRocket(fwWidth * 0.65, fwHeight * 0.25, 'heart');
-    }, 320);
+      // Hide Proposal Modal
+      if (proposalModal) proposalModal.classList.add('hidden');
 
-    // Continuous waves
-    if (fwAutoLaunchTimer) clearInterval(fwAutoLaunchTimer);
-    fwAutoLaunchTimer = setInterval(() => {
-      const isHeart = Math.random() > 0.35;
-      launchRocket(null, null, isHeart ? 'heart' : 'peony');
-    }, 750);
+      // Launch Fireworks
+      launchRocket(fwWidth * 0.25, fwHeight * 0.3, 'heart');
+      launchRocket(fwWidth * 0.5, fwHeight * 0.22, 'heart');
+      launchRocket(fwWidth * 0.75, fwHeight * 0.32, 'heart');
+      setTimeout(() => {
+        launchRocket(fwWidth * 0.35, fwHeight * 0.28, 'peony');
+        launchRocket(fwWidth * 0.65, fwHeight * 0.25, 'heart');
+      }, 350);
 
-    fireworksExplosion();
+      // Continuous rocket waves
+      if (fwAutoLaunchTimer) clearInterval(fwAutoLaunchTimer);
+      fwAutoLaunchTimer = setInterval(() => {
+        const isHeart = Math.random() > 0.35;
+        launchRocket(null, null, isHeart ? 'heart' : 'peony');
+      }, 800);
 
-    setTimeout(() => {
-      if (celebrationModal) celebrationModal.classList.add('active');
-    }, 600);
+      // Confetti storm
+      fireworksExplosion();
+
+      // Open Celebration Modal
+      setTimeout(() => {
+        if (celebrationModal) celebrationModal.classList.remove('hidden');
+      }, 600);
+    });
   }
 
-  if (btnIosYes) {
-    btnIosYes.addEventListener('click', triggerCelebration);
-  }
-
-  const btnFireworksBurstIos = document.getElementById('btn-fireworks-burst-ios');
-  if (btnFireworksBurstIos) {
-    btnFireworksBurstIos.addEventListener('click', (e) => {
+  if (btnMoreFireworks) {
+    btnMoreFireworks.addEventListener('click', (e) => {
       e.stopPropagation();
       launchRocket(fwWidth * 0.5, fwHeight * 0.25, 'heart');
       setTimeout(() => launchRocket(fwWidth * 0.3, fwHeight * 0.3, 'peony'), 150);
@@ -600,7 +633,7 @@
   }
 
   /* ==========================================================================
-     10. CINEMATIC FIREWORKS ENGINE
+     5. CINEMATIC 3D PARTICLES FIREWORKS ENGINE
      ========================================================================== */
   const fwCanvas = document.getElementById('fireworks-canvas');
   let fwCtx = fwCanvas ? fwCanvas.getContext('2d') : null;
@@ -626,7 +659,6 @@
     ['#ff4d8d', '#ff1493', '#ffd1dc', '#ffffff'],
     ['#f5d061', '#ffe58f', '#fff3c4', '#ffffff'],
     ['#a855f7', '#d946ef', '#f472b6', '#ffffff'],
-    ['#38bdf8', '#818cf8', '#c084fc', '#ffffff'],
     ['#ff3366', '#f5d061', '#ffffff', '#ff99bb']
   ];
 
@@ -829,43 +861,46 @@
   }
 
   /* ==========================================================================
-     11. BACKGROUND STARS & FIREFLIES CANVAS
+     6. BACKGROUND TWINKLING STARS
      ========================================================================== */
-  const atmCanvas = document.getElementById('atmosphere-canvas');
-  if (atmCanvas) {
-    const ctx = atmCanvas.getContext('2d');
-    let width = (atmCanvas.width = window.innerWidth);
-    let height = (atmCanvas.height = window.innerHeight);
+  const starsCanvas = document.getElementById('stars-canvas');
+  if (starsCanvas) {
+    const sCtx = starsCanvas.getContext('2d');
+    let sWidth = (starsCanvas.width = window.innerWidth);
+    let sHeight = (starsCanvas.height = window.innerHeight);
 
     window.addEventListener('resize', () => {
-      width = atmCanvas.width = window.innerWidth;
-      height = atmCanvas.height = window.innerHeight;
+      sWidth = starsCanvas.width = window.innerWidth;
+      sHeight = starsCanvas.height = window.innerHeight;
     });
 
     const stars = [];
-    for (let i = 0; i < 90; i++) {
+    for (let i = 0; i < 80; i++) {
       stars.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
+        x: Math.random() * sWidth,
+        y: Math.random() * sHeight,
         r: Math.random() * 1.5 + 0.4,
         a: Math.random() * 0.8 + 0.2,
         speed: Math.random() * 0.02 + 0.005
       });
     }
 
-    function renderAtm() {
-      ctx.clearRect(0, 0, width, height);
+    function renderStars() {
+      sCtx.clearRect(0, 0, sWidth, sHeight);
       for (let s of stars) {
         s.a += s.speed;
         if (s.a > 0.9 || s.a < 0.2) s.speed = -s.speed;
-        ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(s.a)})`;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fill();
+        sCtx.fillStyle = `rgba(255, 255, 255, ${Math.abs(s.a)})`;
+        sCtx.beginPath();
+        sCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        sCtx.fill();
       }
-      requestAnimationFrame(renderAtm);
+      requestAnimationFrame(renderStars);
     }
-    renderAtm();
+    renderStars();
   }
+
+  // Initialize the first question
+  renderQuestion(0);
 
 })();
