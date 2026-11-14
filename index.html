@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>A Love Story For Akansha Mishra ❤️</title>
-  <meta name="description" content="A handcrafted digital love story, created especially for Akansha Mishra.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+  <title>AkanshaOS 18.0 ❤️ | By Rohan Shukla</title>
+  <meta name="description" content="A custom luxury operating system handcrafted for Akansha Mishra by Rohan Shukla.">
   <meta name="theme-color" content="#07060d">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Canvas Confetti CDN -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
@@ -21,617 +18,548 @@
   <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+
+  <!-- Ambient Light Orbs -->
+  <div class="ambient-glow ambient-1"></div>
+  <div class="ambient-glow ambient-2"></div>
+
+  <!-- Background Atmosphere Canvas (Stars & Fireflies) -->
+  <canvas id="atmosphere-canvas"></canvas>
+
+  <!-- Full-Screen Cinema Fireworks Canvas -->
+  <canvas id="fireworks-canvas"></canvas>
+
+  <!-- Camera Flash Overlay -->
+  <div id="flash-overlay"></div>
 
   <!-- Native Background Audio Element with Autoplay -->
   <audio id="bg-audio-tag" src="assets/bg_music.mp3" autoplay loop playsinline preload="auto"></audio>
 
-  <!-- Film Grain Overlay for Cinematic Texture -->
-  <div class="film-grain"></div>
-
-  <!-- Ambient Glow Spheres in Background -->
-  <div class="ambient-glow ambient-glow-1"></div>
-  <div class="ambient-glow ambient-glow-2"></div>
-  <div class="ambient-glow ambient-glow-3"></div>
-
-  <!-- Background Atmosphere Canvas (Stars, Fireflies, Falling Rose Petals) -->
-  <canvas id="atmosphere-canvas"></canvas>
-
-  <!-- Custom Cursor for Desktop -->
-  <div id="custom-cursor" class="custom-cursor">
-    <svg class="custom-cursor-inner" viewBox="0 0 24 24" fill="currentColor">
-      <path
-        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-    </svg>
-  </div>
-
-  <!-- Top Progress Bar -->
-  <div class="progress-bar-container">
-    <div id="progress-bar-fill" class="progress-bar-fill"></div>
-  </div>
-
-  <!-- SVG Gradient Definitions -->
-  <svg width="0" height="0" style="position: absolute;">
-    <defs>
-      <linearGradient id="roseGoldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#ff4d8d" />
-        <stop offset="50%" stop-color="#ffd1dc" />
-        <stop offset="100%" stop-color="#f5d061" />
-      </linearGradient>
-    </defs>
-  </svg>
-
   <!-- ==========================================================================
-       0. CINEMATIC LOADER
+       IPHONE VIEWPORT CONTAINER
        ========================================================================== -->
-  <div id="loader-screen">
-    <svg class="heart-loader-svg" viewBox="0 0 100 100">
-      <path class="heart-path-stroke"
-        d="M50,85 C20,60 5,45 5,26 C5,12 16,3 30,3 C38,3 46,7 50,14 C54,7 62,3 70,3 C84,3 95,12 95,26 C95,45 80,60 50,85 Z" />
-    </svg>
-    <div class="loader-text">Kuch bohot special load ho raha hai Akansha ke liye...</div>
-    <div id="loader-percent" class="loader-percent">0%</div>
-    <div id="loader-tap-hint" class="loader-tap-hint">✨ Tap anywhere to begin with music 🎵 ✨</div>
-  </div>
+  <div class="os-viewport-container">
+    <div class="iphone-chassis">
+      <div class="iphone-screen">
 
-  <!-- ==========================================================================
-       FLOATING HEADER NAVIGATION
-       ========================================================================== -->
-  <header class="site-header">
-    <button id="brand-logo-btn" class="brand-logo" title="Tap 5 times for a secret!">
-      <svg class="brand-heart-icon" viewBox="0 0 24 24" fill="currentColor">
-        <path
-          d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-      </svg>
-      <span>Akansha & Me</span>
-    </button>
-
-    <nav class="nav-links">
-      <a href="#chapter-1">Jab Tum Mili</a>
-      <a href="#chapter-2">Tumhare Baare Mein</a>
-      <a href="#chapter-3">Meri Duniya</a>
-      <a href="#chapter-4">Humari Doori</a>
-      <a href="#chapter-5">Pehli Mulaqat</a>
-      <a href="#chapter-6">Khat</a>
-      <a href="#proposal-section" style="color: var(--primary-rose); font-weight: 600;">The Proposal 💍</a>
-    </nav>
-
-    <button id="header-music-toggle" class="music-toggle-btn interactive" title="Mute / Unmute">
-      <div class="equalizer-icon">
-        <div class="eq-bar"></div>
-        <div class="eq-bar"></div>
-        <div class="eq-bar"></div>
-        <div class="eq-bar"></div>
-      </div>
-      <span class="music-pill-title">Dil Ye Bekarar Kyun Hai 🎵</span>
-    </button>
-  </header>
-
-  <!-- ==========================================================================
-       BOTTOM FLOATING MUSIC PLAYER CAPSULE
-       ========================================================================== -->
-  <div id="bottom-music-toggle" class="bottom-music-player interactive" title="Click to play/pause">
-    <div class="vinyl-disc">
-      <img src="assets/photo2.jpg" alt="Akansha">
-    </div>
-    <div class="music-meta">
-      <div class="music-track-title">Dil Ye Bekarar Kyun Hai</div>
-      <div class="music-artist-name">Mohit Chauhan & Shreya Ghoshal 🎵</div>
-    </div>
-    <div class="equalizer-icon">
-      <div class="eq-bar"></div>
-      <div class="eq-bar"></div>
-      <div class="eq-bar"></div>
-      <div class="eq-bar"></div>
-    </div>
-  </div>
-
-  <!-- ==========================================================================
-       MAIN CONTENT CONTAINER
-       ========================================================================== -->
-  <main class="main-wrapper">
-
-    <!-- 1. INTRO CHAPTER -->
-    <section id="intro-section" class="story-section">
-      <div class="intro-content">
-        <span class="chapter-badge">✨ A Love Beyond Distances</span>
-        <div class="intro-poetic-lines">
-          <h1 class="poetic-line">Hum kabhi mile nahi...</h1>
-          <h2 class="poetic-line">Par dil ko kabhi pata hi nahi chala ki hum door hain.</h2>
-          <h3 class="poetic-line accent">Screen ke uss paar se tumne meri poori duniya badal di, Akansha.</h3>
+        <!-- STATUS BAR -->
+        <div class="ios-status-bar">
+          <span id="status-clock" class="status-time">11:11</span>
+          <div class="status-icons">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 18.25c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l.73-.73C8.03 19.9 9.94 20.5 12 20.5c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
+            <span style="font-size: 0.72rem; font-weight: 700;">5G</span>
+            <span style="color: var(--primary-rose);">❤️ 100%</span>
+          </div>
         </div>
 
-        <button id="open-story-btn" class="open-story-btn interactive">
-          <div class="pulse-ring"></div>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path
-              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+        <!-- DYNAMIC ISLAND (Interactive Pill) -->
+        <div class="dynamic-island-wrapper">
+          <div id="dynamic-island" class="dynamic-island" title="Tap to expand Now Playing">
+            <!-- Compact State -->
+            <div class="island-compact-view">
+              <div class="island-icon-left">
+                <span style="font-size: 0.8rem;">❤️</span>
+                <span style="font-size: 0.72rem; font-weight: 600;">AkanshaOS</span>
+              </div>
+              <div class="island-icon-right">
+                <div class="island-eq-bar"></div>
+                <div class="island-eq-bar"></div>
+                <div class="island-eq-bar"></div>
+              </div>
+            </div>
+
+            <!-- Expanded State -->
+            <div class="island-expanded-view">
+              <img src="assets/photo2.jpg" alt="Akansha" class="island-album-art">
+              <div class="island-song-details">
+                <div class="island-title">Dil Ye Bekarar Kyun Hai 🎵</div>
+                <div class="island-artist">Playing for Akansha • Rohan</div>
+              </div>
+              <div style="font-size: 1.1rem; color: var(--primary-rose);">💖</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================================================
+             0. BOOT SCREEN
+             ========================================================================== -->
+        <div id="boot-screen">
+          <svg class="boot-apple-heart" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
           </svg>
-          <span>Begin Our Story ❤️</span>
-        </button>
+          <div class="boot-os-title">AkanshaOS 18.0</div>
+          <div class="boot-engineer-credit">Designed & Coded by Rohan Shukla (Software Engineer)</div>
 
-        <div class="scroll-indicator">
-          <span>Scroll to begin our journey</span>
-          <div class="mouse-scroll-icon">
-            <div class="mouse-scroll-wheel"></div>
+          <div class="boot-progress-track">
+            <div id="boot-progress-fill" class="boot-progress-fill"></div>
           </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- 2. CHAPTER 1: "Jab Tum Mili" (Chat Replay) -->
-    <section id="chapter-1" class="story-section">
-      <span class="chapter-badge">Chapter 01</span>
-      <h2 class="section-title">Jab Tum Mili</h2>
-      <p class="section-subtitle">"Borivali me dekha tha... black kapdo me!" — Ek choti si baat jo meri sabse pyaari aadat ban gayi ❤️</p>
-
-      <div class="chat-device-frame">
-        <div class="chat-header">
-          <div class="chat-user-info">
-            <div class="chat-avatar-container">
-              <img src="assets/photo2.jpg" alt="Akansha" class="chat-avatar">
-              <span class="chat-status-dot"></span>
-            </div>
-            <div class="chat-user-names">
-              <h4>Akansha Mishra <span class="verified-badge">✓</span></h4>
-              <span class="chat-status-text">Borivali Connection | Online in my heart</span>
-            </div>
-          </div>
-          <button id="chat-replay-btn" class="chat-replay-btn interactive" title="Replay Chat">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
-            </svg>
+          <button id="boot-unlock-btn" class="boot-unlock-btn">
+            <span>✨ Tap to Unlock Akansha's World 🔒 ✨</span>
           </button>
         </div>
 
-        <div id="chat-stream" class="chat-body-stream">
-          <!-- Chat messages dynamically rendered with typing delays -->
-        </div>
+        <!-- ==========================================================================
+             1. LOCK SCREEN
+             ========================================================================== -->
+        <div id="lockscreen-view">
+          <div class="lockscreen-header">
+            <div id="lock-date" class="lock-date-display">Saturday, November 14</div>
+            <div id="lock-clock" class="lock-time-display">11:11</div>
 
-        <div id="chat-typing-indicator" class="typing-indicator-bubble">
-          <div class="typing-dot"></div>
-          <div class="typing-dot"></div>
-          <div class="typing-dot"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. CHAPTER 2: "Tumhare Baare Mein" (3D Tilt Cards) -->
-    <section id="chapter-2" class="story-section">
-      <span class="chapter-badge">Chapter 02</span>
-      <h2 class="section-title">Tumhare Baare Mein</h2>
-      <p class="section-subtitle">Wo baatein jo tumhe sabse alag, sabse pyaari aur mere dil ke sabse kareeb banati hain.
-      </p>
-
-      <div class="traits-grid">
-        <!-- Card 1: Smile -->
-        <div class="trait-card interactive">
-          <div class="card-glare"></div>
-          <span class="trait-badge">Pure Magic ✨</span>
-          <div class="trait-image-wrapper">
-            <img src="assets/photo1.jpg" alt="Akansha Smile" class="trait-img">
-          </div>
-          <h3>Teri Qatilana Muskaan</h3>
-          <div class="trait-subtitle">That pure, radiant smile</div>
-          <p class="trait-desc">Jab bhi tum hasti ho na Akansha, kasam se lagta hai din bhar ki saari thakan aur stress
-            ek second me gayab ho gaya. That smile has its own divine magic.</p>
-        </div>
-
-        <!-- Card 2: Eyes -->
-        <div class="trait-card interactive">
-          <div class="card-glare"></div>
-          <span class="trait-badge">Mesmerizing 👁️</span>
-          <div class="trait-image-wrapper">
-            <img src="assets/photo2.jpg" alt="Akansha Eyes" class="trait-img">
-          </div>
-          <h3>Teri Gehari Aankhein</h3>
-          <div class="trait-subtitle">Directly into my soul</div>
-          <p class="trait-desc">Screen pe dekh ke bhi aisa lagta hai jaise tum seedha meri rooh me dekh rahi ho. Un
-            aankhon me ek aisi masoomiyat aur kashish hai jo lafzon me bayaan nahi ho sakti.</p>
-        </div>
-
-        <!-- Card 3: Elegance -->
-        <div class="trait-card interactive">
-          <div class="card-glare"></div>
-          <span class="trait-badge">Royalty 👑</span>
-          <div class="trait-image-wrapper">
-            <img src="assets/photo3.jpg" alt="Akansha Elegance" class="trait-img">
-          </div>
-          <h3>Your Grace & Elegance</h3>
-          <div class="trait-subtitle">The way you carry yourself</div>
-          <p class="trait-desc">White outfit, that ring, the soft glow... tum jab bhi tayar hoti ho, lagta hai kisi
-            Bollywood film ka dream slow-motion romantic frame chal raha ho.</p>
-        </div>
-
-        <!-- Card 4: Scratch Card (Interactive Love Secret) -->
-        <div class="trait-card interactive">
-          <div class="card-glare"></div>
-          <span class="trait-badge">Secret Note ✨ (Scratch Karo!)</span>
-          
-          <div class="scratch-card-container">
-            <div class="scratch-secret-content">
-              <div class="scratch-heart-burst">💖</div>
-              <div class="scratch-secret-tag">FOR MY AKANSHA</div>
-              <p class="scratch-secret-text">
-                "Borivali me uss black outfit me dekhne ke baad se,<br>
-                tumhara chehra mere dil se utra hi nahi!<br>
-                You are my forever happiness, Akansha 🥰✨"
-              </p>
-              <div class="scratch-secret-author">— Rohan (Tumhara Favourite Mummu)</div>
+            <div class="lock-widgets-container">
+              <div class="lock-widget-pill">
+                <span>📍 Borivali ⇄ Dahisar:</span>
+                <span class="widget-val">2 km</span>
+              </div>
+              <div class="lock-widget-pill">
+                <span>❤️ Battery:</span>
+                <span class="widget-val">100% Akansha</span>
+              </div>
             </div>
-            <canvas id="scratch-canvas" class="scratch-canvas"></canvas>
-          </div>
-          <div class="scratch-instruction">👆 Ungli ya cursor se scratch karke secret padho!</div>
 
-          <h3>Scratch & Win My Heart 🎁</h3>
-          <div class="trait-subtitle">A special secret note just for you</div>
-          <p class="trait-desc">Kuch baatein aisi hoti hain jo sabke saamne nahi, sirf scratch karke kholi jaati hain... Ek pyara sa secret jo sirf Akansha ke liye hai!</p>
-        </div>
-
-        <!-- Card 5: Care -->
-        <div class="trait-card interactive">
-          <div class="card-glare"></div>
-          <span class="trait-badge">Pure Heart 💖</span>
-          <div class="trait-icon-feature">
-            <span>🥰</span>
-          </div>
-          <h3>Choti Choti Baaton Pe Care</h3>
-          <div class="trait-subtitle">The purest soul</div>
-          <p class="trait-desc">'Khaana khaya time pe?', 'Paani piya?', 'Zyada phone mat chalao, so jao'... Ye choti
-            choti fikar hi batati hai ki tumhara dil kitna saaf aur sachha hai.</p>
-        </div>
-
-        <!-- Card 6: Nakhre -->
-        <div class="trait-card interactive">
-          <div class="card-glare"></div>
-          <span class="trait-badge">Cutest Nakhre 🥺</span>
-          <div class="trait-icon-feature">
-            <span>🙈</span>
-          </div>
-          <h3>Tumhare Pyaare Nakhre & 'Hmmm'</h3>
-          <div class="trait-subtitle">Cutest attitude ever</div>
-          <p class="trait-desc">Kabhi halka sa gussa hona, fir 'hmmm' bol ke wait karna ki main manaun... Tumhe manane
-            me jo khushi milti hai, wo duniya ki kisi cheez me nahi!</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4. CHAPTER 3: "Meri Duniya Ki Jhalak" (Polaroids + Cinematic Video) -->
-    <section id="chapter-3" class="story-section">
-      <span class="chapter-badge">Chapter 03</span>
-      <h2 class="section-title">Meri Duniya Ki Jhalak</h2>
-      <p class="section-subtitle">Ye main hoon, ab tumhe pata hona chahiye kis se roz ghanto baat kar rahi ho 😄</p>
-
-      <!-- Polaroid Hanging Line -->
-      <div class="polariod-hanging-string">
-        <div class="golden-string-line"></div>
-        <div class="fairy-bulb" style="left: 10%;"></div>
-        <div class="fairy-bulb" style="left: 35%; animation-delay: 0.5s;"></div>
-        <div class="fairy-bulb" style="left: 65%; animation-delay: 1.1s;"></div>
-        <div class="fairy-bulb" style="left: 90%; animation-delay: 0.8s;"></div>
-
-        <div class="polaroid-cards-row">
-          <div class="polaroid-card sway-left interactive">
-            <div class="clothes-pin"></div>
-            <div class="polaroid-photo-frame">
-              <img src="assets/photo1.jpg" alt="Moment 1">
+            <!-- PUSH NOTIFICATION FROM ROHAN -->
+            <div id="lock-notif-banner" class="ios-notification-banner" title="Tap to read messages">
+              <div class="notif-header">
+                <div class="notif-app-tag">
+                  <span>💬</span>
+                  <span>MESSAGES</span>
+                </div>
+                <span class="notif-time">Just now</span>
+              </div>
+              <div class="notif-sender">Rohan (Your Favourite Mummu)</div>
+              <div class="notif-message">"Hey Akansha... Borivali me dekha tha black kapdo me, tabhi se dil me bas gayi ho! ❤️"</div>
             </div>
-            <div class="polaroid-caption">Wo pehli tasveer ❤️</div>
           </div>
 
-          <div class="polaroid-card sway-right interactive" style="animation-delay: -1.5s;">
-            <div class="clothes-pin"></div>
-            <div class="polaroid-photo-frame">
-              <img src="assets/photo2.jpg" alt="Moment 2">
-            </div>
-            <div class="polaroid-caption">Meri Favourite Gaze ✨</div>
-          </div>
-
-          <div class="polaroid-card sway-left interactive" style="animation-delay: -2.8s;">
-            <div class="clothes-pin"></div>
-            <div class="polaroid-photo-frame">
-              <img src="assets/photo3.jpg" alt="Moment 3">
-            </div>
-            <div class="polaroid-caption">Subah ki pehli yaad 💫</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Dual Cinematic Video Gallery -->
-      <div class="videos-grid-duo">
-        <!-- Video 1 -->
-        <div class="video-showcase-card interactive">
-          <span class="video-card-badge">Cinema Reel 01 🎥</span>
-          <div class="video-player-wrapper">
-            <button id="video-unmute-btn-1" class="video-unmute-badge interactive" data-video-id="story-video-1">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M11 5L6 9H2v6h4l5 4V5z" />
-                <line x1="23" y1="9" x2="17" y2="15" />
-                <line x1="17" y1="9" x2="23" y2="15" />
-              </svg>
-              <span>Tap to Unmute</span>
+          <div class="lockscreen-footer">
+            <button id="lock-swipe-btn" class="lock-swipe-pill">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+              <span>Swipe or Tap to Open Home</span>
             </button>
-            <video id="story-video-1" class="cinematic-video" playsinline muted loop autoplay preload="auto">
-              <source src="assets/video.mp4" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
+            <div class="lock-tools-row">
+              <div class="lock-tool-btn" title="Flashlight">🔦</div>
+              <div class="lock-tool-btn" title="Camera">📷</div>
+            </div>
           </div>
-          <h3 class="video-card-title">Main Aur Meri Baatein 😄</h3>
-          <p class="video-bottom-caption">"Ye main hoon, ab tumhe pata hona chahiye kis se roz ghanto baat hoti hai! Screen pe hazaron baar dekha hai... par real me milne ka intezaar alag hi level pe hai."</p>
         </div>
 
-        <!-- Video 2 (Newly Uploaded Video!) -->
-        <div class="video-showcase-card interactive">
-          <span class="video-card-badge">Cinema Reel 02 ✨</span>
-          <div class="video-player-wrapper">
-            <button id="video-unmute-btn-2" class="video-unmute-badge interactive" data-video-id="story-video-2">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M11 5L6 9H2v6h4l5 4V5z" />
-                <line x1="23" y1="9" x2="17" y2="15" />
-                <line x1="17" y1="9" x2="23" y2="15" />
-              </svg>
-              <span>Tap to Unmute</span>
+        <!-- ==========================================================================
+             2. HOMESCREEN
+             ========================================================================== -->
+        <div id="homescreen-view">
+          <div>
+            <div class="home-search-pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <span>Search in Rohan's heart...</span>
+            </div>
+
+            <!-- 8 APPS GRID -->
+            <div class="ios-apps-grid">
+              <!-- App 1: Messages -->
+              <div class="ios-app-item" data-app="app-messages">
+                <div class="ios-app-icon icon-messages">💬</div>
+                <span class="ios-app-label">Messages</span>
+              </div>
+
+              <!-- App 2: Photos -->
+              <div class="ios-app-item" data-app="app-photos">
+                <div class="ios-app-icon icon-photos">📷</div>
+                <span class="ios-app-label">Photos</span>
+              </div>
+
+              <!-- App 3: Reels -->
+              <div class="ios-app-item" data-app="app-reels">
+                <div class="ios-app-icon icon-reels">🎬</div>
+                <span class="ios-app-label">Reels</span>
+              </div>
+
+              <!-- App 4: Maps -->
+              <div class="ios-app-item" data-app="app-maps">
+                <div class="ios-app-icon icon-maps">🗺️</div>
+                <span class="ios-app-label">Maps</span>
+              </div>
+
+              <!-- App 5: Notes -->
+              <div class="ios-app-item" data-app="app-notes">
+                <div class="ios-app-icon icon-notes">📝</div>
+                <span class="ios-app-label">Notes</span>
+              </div>
+
+              <!-- App 6: Scratch Card -->
+              <div class="ios-app-item" data-app="app-scratch">
+                <div class="ios-app-icon icon-scratch">🪙</div>
+                <span class="ios-app-label">Secret Gift</span>
+              </div>
+
+              <!-- App 7: Music -->
+              <div class="ios-app-item" data-app="app-music">
+                <div class="ios-app-icon icon-music">🎵</div>
+                <span class="ios-app-label">Music</span>
+              </div>
+
+              <!-- App 8: FaceTime (The Big Question Climax) -->
+              <div class="ios-app-item" id="app-trigger-facetime">
+                <div class="ios-app-icon icon-facetime">📞</div>
+                <span class="ios-app-label" style="color: var(--primary-rose); font-weight: 700;">FaceTime ❤️</span>
+              </div>
+            </div>
+
+            <!-- HOME WIDGET: BORIVALI TO DAHISAR -->
+            <div class="home-feature-widget" data-app="app-maps">
+              <div class="widget-route-info">
+                <h4>Borivali ⇄ Dahisar Route</h4>
+                <div class="widget-route-sub">Rohan's Place to Akansha's Place</div>
+              </div>
+              <div class="widget-badge-km">2.0 km • 5 min</div>
+            </div>
+          </div>
+
+          <!-- BOTTOM DOCK -->
+          <div class="ios-dock">
+            <div class="ios-app-item" data-app="app-messages">
+              <div class="ios-app-icon icon-messages" style="width: 52px; height: 52px;">💬</div>
+            </div>
+            <div class="ios-app-item" data-app="app-photos">
+              <div class="ios-app-icon icon-photos" style="width: 52px; height: 52px;">📷</div>
+            </div>
+            <div class="ios-app-item" data-app="app-reels">
+              <div class="ios-app-icon icon-reels" style="width: 52px; height: 52px;">🎬</div>
+            </div>
+            <div class="ios-app-item" id="dock-facetime-btn">
+              <div class="ios-app-icon icon-facetime" style="width: 52px; height: 52px;">📞</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================================================
+             APP WINDOW 1: MESSAGES (Chat Replay of Borivali & Black Dress)
+             ========================================================================== -->
+        <div id="app-messages" class="ios-app-window">
+          <div class="app-nav-bar">
+            <button class="app-back-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              <span>Back</span>
             </button>
-            <video id="story-video-2" class="cinematic-video" playsinline muted loop autoplay preload="auto">
-              <source src="assets/video2.mp4" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
+            <div class="app-nav-title">Akansha Mishra ❤️</div>
+            <button id="chat-replay-action" style="background:none; border:none; color:var(--gold-primary); font-size:1.1rem; cursor:pointer;" title="Replay Chat">🔄</button>
           </div>
-          <h3 class="video-card-title">Tumhara Sukoon & Pyaari Yaadein ❤️</h3>
-          <p class="video-bottom-caption">"Ye video jab bhi play hota hai na Akansha, dil me ek alag hi sukoon bhar jaata hai. Teri ye masoomiyat aur adaayein... sach me rab ne fursat se banaya hai tumhe 🥰"</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. CHAPTER 4: "Humari Doori" (Distance Map & Counter) -->
-    <section id="chapter-4" class="story-section">
-      <span class="chapter-badge">Chapter 04</span>
-      <h2 class="section-title">Humari Doori</h2>
-      <p class="section-subtitle">Kitne bhi kilometers kyun na hon beech me, dil ke taar hamesha jude rehte hain.</p>
-
-      <div class="distance-map-card">
-        <!-- SVG Romantic Flight Path -->
-        <svg class="map-svg-canvas" viewBox="0 0 600 200">
-          <!-- City A Beacon -->
-          <circle cx="100" cy="140" r="14" fill="rgba(245, 208, 97, 0.2)" class="city-node-glow" />
-          <circle cx="100" cy="140" r="6" fill="#f5d061" />
-          <text x="100" y="175" fill="#f5d061" font-size="12" font-family="'Poppins', sans-serif" text-anchor="middle"
-            font-weight="600">Rohan (Borivali)</text>
-
-          <!-- City B Beacon (Akansha's City) -->
-          <circle cx="500" cy="60" r="14" fill="rgba(255, 77, 141, 0.2)" class="city-node-glow" />
-          <circle cx="500" cy="60" r="6" fill="#ff4d8d" />
-          <text x="500" y="95" fill="#ff4d8d" font-size="12" font-family="'Poppins', sans-serif" text-anchor="middle"
-            font-weight="600">Akansha (Dahisar)</text>
-
-          <!-- Curved Connection Path -->
-          <path id="flight-arc" class="flight-curve-path" d="M 100 140 Q 300 10 500 60" />
-
-          <!-- Pulsing Travelling Heart along Path -->
-          <g class="travelling-heart-icon">
-            <path d="M 0 0 C -4 -5 -10 -5 -10 -1 C -10 3 0 10 0 10 C 0 10 10 3 10 -1 C 10 -5 4 -5 0 0 Z" fill="#ff4d8d">
-              <animateMotion repeatCount="indefinite" dur="3.5s">
-                <mpath href="#flight-arc" />
-              </animateMotion>
-            </path>
-          </g>
-        </svg>
-
-        <div class="distance-highlight-box">
-          <div class="distance-km-counter">Borivali ⇄ Dahisar (2 km) ❤️</div>
-          <div class="distance-punchline">"Humare beech sirf 2 km hain, par dil ke beech 0.00 mm! Bas ek station aur 5 minute ka rasta 😄"</div>
-        </div>
-
-        <div class="stats-grid-row">
-          <div class="stat-capsule">
-            <div class="stat-value">100+ Hrs</div>
-            <div class="stat-label">Audio & Video Calls</div>
-          </div>
-          <div class="stat-capsule">
-            <div class="stat-value">15,000+</div>
-            <div class="stat-label">Messages Exchanged</div>
-          </div>
-          <div class="stat-capsule">
-            <div class="stat-value">24/7</div>
-            <div class="stat-label">Dil Me Rehna</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 6. CHAPTER 5: "Jab Pehli Baar Milenge" (Sunset Dream & Plan) -->
-    <section id="chapter-5" class="story-section">
-      <span class="chapter-badge">Chapter 05</span>
-      <h2 class="section-title">Jab Pehli Baar Milenge</h2>
-      <p class="section-subtitle">Wo din aayega jab ye screen nahi hogi, tum mere saamne khadi hogi.</p>
-
-      <div class="sunset-dream-container">
-        <div class="sunset-sun-orb"></div>
-        <div class="timeline-plan-list">
-          <div class="plan-item">
-            <div class="plan-step-num">01</div>
-            <div class="plan-content">
-              <h4>The First Real Gaze</h4>
-              <p>Main tumhare saamne khada honga, thoda nervous, thoda muskuraata hua... aur tum wahan hogi, pehle se
-                bhi kahin zyada khoobsurat.</p>
+          <div class="app-body-content">
+            <div style="text-align: center; margin-bottom: 14px; font-size: 0.75rem; color: var(--gold-light);">
+              "Borivali me dekha tha... black kapdo me!" 💬
             </div>
-          </div>
-
-          <div class="plan-item">
-            <div class="plan-step-num">02</div>
-            <div class="plan-content">
-              <h4>Coffee, Chai & Endless Talks</h4>
-              <p>Wo saari baatein jo video call pe adhuri reh jaati thin. Tumhari favourite drink, aur bas ghanto tak ek
-                dusre ko sunna.</p>
+            <div id="chat-stream-ios" class="chat-bubbles-stream">
+              <!-- Replayed dynamically via JavaScript -->
             </div>
-          </div>
-
-          <div class="plan-item">
-            <div class="plan-step-num">03</div>
-            <div class="plan-content">
-              <h4>Sunset Walk & Slow Moments</h4>
-              <p>Shaam ki thandi hawa, sunset ki golden dhoop, aur haath me haath lekar chalna... Bina kisi jaldi ke,
-                bas uss pal ko jeena.</p>
-            </div>
-          </div>
-
-          <div class="plan-item">
-            <div class="plan-step-num">04</div>
-            <div class="plan-content">
-              <h4>No Phones, Just Us</h4>
-              <p>Phones silent pe, poori duniya side me. Sirf tum, main, aur wo ehsaas ki hum aakhir kaar mil gaye.</p>
+            <div id="chat-typing-bubble" class="ios-typing-indicator">
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- 7. CHAPTER 6: LOVE LETTER (3D Envelope & Handwriting) -->
-    <section id="chapter-6" class="story-section">
-      <span class="chapter-badge">Chapter 06</span>
-      <h2 class="section-title">Khat-e-Dil</h2>
-      <p class="section-subtitle">Kuch baatein jo message me nahi, seedha dil se likhi jaati hain...</p>
-
-      <div class="letter-section-container">
-        <div id="wax-envelope" class="wax-envelope-wrapper interactive">
-          <div class="envelope-flap"></div>
-          <button id="wax-seal-btn" class="wax-seal-button interactive" title="Break the seal to read">
-            ❤️
-          </button>
-        </div>
-
-        <div id="unfolded-parchment" class="unfolded-parchment">
-          <div class="parchment-stamp">SEALED<br>WITH LOVE</div>
-          <div id="typewriter-text" class="typewriter-text">
-            <!-- Dynamically typed via JavaScript -->
+        <!-- ==========================================================================
+             APP WINDOW 2: PHOTOS (Gallery Lightbox)
+             ========================================================================== -->
+        <div id="app-photos" class="ios-app-window">
+          <div class="app-nav-bar">
+            <button class="app-back-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              <span>Back</span>
+            </button>
+            <div class="app-nav-title">Favorites Album (Akansha)</div>
+            <span style="font-size: 0.85rem; color: var(--gold-primary);">3 Photos</span>
+          </div>
+          <div class="app-body-content">
+            <div class="photos-grid-view">
+              <div class="photo-card-thumb" style="grid-column: span 2; height: 260px;">
+                <img src="assets/photo2.jpg" alt="Akansha Portrait">
+              </div>
+              <div class="photo-card-thumb">
+                <img src="assets/photo1.jpg" alt="Akansha Smile">
+              </div>
+              <div class="photo-card-thumb">
+                <img src="assets/photo3.jpg" alt="Akansha Elegance">
+              </div>
+            </div>
+            <p style="text-align: center; font-size: 0.8rem; color: var(--primary-blush); margin-top: 20px; font-style: italic;">
+              "Duniya ki sabse khoobsurat muskaan aur aankhein... sirf mere dil ke liye ❤️"
+            </p>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- 8. CHAPTER 7: THE PROPOSAL (Climax) -->
-    <section id="proposal-section">
-      <div id="proposal-vignette" class="proposal-vignette"></div>
-      <div class="proposal-spotlight"></div>
+        <!-- ==========================================================================
+             APP WINDOW 3: REELS (Vertical Cinema Reels)
+             ========================================================================== -->
+        <div id="app-reels" class="ios-app-window">
+          <div class="app-nav-bar">
+            <button class="app-back-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              <span>Back</span>
+            </button>
+            <div class="app-nav-title">Cinema Reels 🎬</div>
+            <span style="font-size: 0.85rem; color: var(--gold-primary);">2 Videos</span>
+          </div>
+          <div class="app-body-content">
+            <div class="reels-feed-container">
+              <!-- Reel 1 -->
+              <div class="reel-item-card">
+                <button class="reel-unmute-overlay reel-unmute-1">🔊 Tap to Unmute</button>
+                <video id="reel-video-1" playsinline muted loop autoplay preload="auto">
+                  <source src="assets/video.mp4" type="video/mp4">
+                </video>
+                <div class="reel-meta-overlay">
+                  <div class="reel-caption">"Ye main hoon, ab tumhe pata hona chahiye kis se roz ghanto baat hoti hai 😄❤️"</div>
+                </div>
+              </div>
 
-      <div class="proposal-box">
-        <span class="chapter-badge" style="border-color: var(--primary-rose); color: var(--primary-rose);">The Big
-          Question 💍</span>
-        <h2 class="proposal-big-name">Akansha Mishra...</h2>
-        <h3 class="proposal-question">Kya tum meri girlfriend banogi?</h3>
-        <p class="proposal-english-sub">Will you make me the happiest person and say YES? ❤️</p>
-
-        <div class="proposal-buttons-area">
-          <button id="btn-proposal-yes" class="btn-proposal-yes interactive">
-            YES! Hamesha ke liye ❤️
-          </button>
-          <button id="btn-proposal-no" class="btn-proposal-no interactive">
-            No 🙈
-          </button>
+              <!-- Reel 2 -->
+              <div class="reel-item-card">
+                <button class="reel-unmute-overlay reel-unmute-2">🔊 Tap to Unmute</button>
+                <video id="reel-video-2" playsinline muted loop autoplay preload="auto">
+                  <source src="assets/video2.mp4" type="video/mp4">
+                </video>
+                <div class="reel-meta-overlay">
+                  <div class="reel-caption">"Ye video jab bhi play hota hai na Akansha, dil me ek alag sa sukoon bhar jaata hai 🥰✨"</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
 
-    <!-- ==========================================================================
-         HIGHLIGHTED SIGNATURE: MADE BY YOUR FAVOURITE MUMMU
-         ========================================================================== -->
-    <footer class="mummu-love-footer">
-      <div class="mummu-badge-glow">
-        <div class="mummu-crown">👑</div>
-        <div class="mummu-main-tag">Made with endless love for Akansha ❤️</div>
-        <h3 class="mummu-highlight-text">
-          Made by <span>your favourite mummu</span>
-        </h3>
-        <div class="mummu-engineer-badge">
-          (Rohan Shukla — Software Engineer)
+        <!-- ==========================================================================
+             APP WINDOW 4: MAPS (2 km Borivali to Dahisar)
+             ========================================================================== -->
+        <div id="app-maps" class="ios-app-window">
+          <div class="app-nav-bar">
+            <button class="app-back-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              <span>Back</span>
+            </button>
+            <div class="app-nav-title">Maps Navigation 📍</div>
+            <span style="font-size: 0.85rem; color: #10b981;">Online</span>
+          </div>
+          <div class="app-body-content">
+            <div class="maps-app-canvas">
+              <svg viewBox="0 0 400 180" style="width: 100%; height: 100%;">
+                <!-- Origin: Borivali -->
+                <circle cx="80" cy="130" r="8" fill="#f5d061"/>
+                <text x="80" y="160" fill="#f5d061" font-size="11" font-weight="700" text-anchor="middle">Rohan (Borivali)</text>
+
+                <!-- Destination: Dahisar -->
+                <circle cx="320" cy="50" r="8" fill="#ff4d8d"/>
+                <text x="320" y="80" fill="#ff4d8d" font-size="11" font-weight="700" text-anchor="middle">Akansha (Dahisar)</text>
+
+                <!-- Connection Arc -->
+                <path id="ios-maps-route" d="M 80 130 Q 200 20 320 50" fill="none" stroke="rgba(255, 77, 141, 0.4)" stroke-width="3" stroke-dasharray="6 6"/>
+
+                <!-- Traveling Heart -->
+                <g>
+                  <path d="M 0 0 C -4 -5 -10 -5 -10 -1 C -10 3 0 10 0 10 C 0 10 10 3 10 -1 C 10 -5 4 -5 0 0 Z" fill="#ff4d8d">
+                    <animateMotion repeatCount="indefinite" dur="3.5s">
+                      <mpath href="#ios-maps-route" />
+                    </animateMotion>
+                  </path>
+                </g>
+              </svg>
+            </div>
+
+            <div class="maps-stat-card">
+              <div>
+                <div style="font-size: 1.15rem; font-weight: 700; color: #fff;">Borivali ⇄ Dahisar</div>
+                <div style="font-size: 0.78rem; color: var(--gold-light);">Via S.V. Road / Local Train (1 Station)</div>
+              </div>
+              <div style="font-size: 1.35rem; font-weight: 800; color: var(--gold-primary);">2.0 km</div>
+            </div>
+
+            <p style="text-align: center; margin-top: 18px; font-size: 0.88rem; color: var(--primary-blush);">
+              "Humare beech sirf 2 km hain, par dil ke beech 0.00 mm! Bas ek kadam ki doori 😄❤️"
+            </p>
+          </div>
         </div>
-      </div>
-    </footer>
 
-  </main>
+        <!-- ==========================================================================
+             APP WINDOW 5: NOTES (Handwritten Letter)
+             ========================================================================== -->
+        <div id="app-notes" class="ios-app-window">
+          <div class="app-nav-bar">
+            <button class="app-back-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              <span>Back</span>
+            </button>
+            <div class="app-nav-title">Notes 📝</div>
+            <span style="font-size: 0.82rem; color: var(--gold-primary);">Private</span>
+          </div>
+          <div class="app-body-content">
+            <div class="notes-paper-container">
+              <h3>Khat-e-Dil: For Akansha</h3>
+              <div class="notes-body-text">
+Meri sabse pyaari Akansha,
 
-  <!-- ==========================================================================
-       CAMERA FLASH OVERLAY
-       ========================================================================== -->
-  <div id="flash-overlay"></div>
+Sach kahun toh mujhe nahi pata tha ki Borivali aur black kapdo wali uss choti si baat se shuru hua safar mere dil ke itna kareeb aa jayega.
 
-  <!-- ==========================================================================
-       FULL SCREEN CINEMA FIREWORKS CANVAS
-       ========================================================================== -->
-  <canvas id="fireworks-canvas"></canvas>
+Hum roz baatein karte hain, calls pe ghanto nikal jaate hain... par har video call ke baad, mera dil sirf tumhari taraf hi kheencha chala gaya.
 
-  <!-- ==========================================================================
-       CELEBRATION MODAL ON "YES"
-       ========================================================================== -->
-  <div id="celebration-modal">
-    <div class="celebration-card">
-      <div class="celebration-ring-burst">💍</div>
-      <h2 class="celebration-title">MAINE KAHA THA NA! ❤️🎉</h2>
-      <div class="celebration-subtitle">She Said YES! Now you are officially mine!</div>
+Log kehte hain ki distance bohot mushkil hota hai. Par Borivali se Dahisar ka faasla toh sirf 2 km aur ek station ka hai! Aur dil ke beech toh 0 doori hai.
 
-      <div class="celebration-collage-row">
-        <div class="collage-thumbnail" style="--rot: -6deg;">
-          <img src="assets/photo1.jpg" alt="Akansha 1">
+Tumhari hansi, tumhari aawaz, tumhara bina wajah baat karte karte muskura dena... mujhe har roz tumse thoda aur pyaar karne pe majboor kar deta hai.
+
+Mujhe nahi pata kal zindagi humein kahan le jayegi, par aaj, iss lamhe me, mera dil 100% sure hai... ki mujhe sirf aur sirf tum chahiye.
+
+Always yours, Rohan
+— Your favourite mummu ❤️ (Software Engineer)
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="collage-thumbnail" style="--rot: 2deg; transform: scale(1.08);">
-          <img src="assets/photo2.jpg" alt="Akansha 2">
+
+        <!-- ==========================================================================
+             APP WINDOW 6: SCRATCH NOTE (Secret Gift)
+             ========================================================================== -->
+        <div id="app-scratch" class="ios-app-window">
+          <div class="app-nav-bar">
+            <button class="app-back-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              <span>Back</span>
+            </button>
+            <div class="app-nav-title">Secret Coupon 🪙</div>
+            <span style="font-size: 0.82rem; color: var(--gold-primary);">Special</span>
+          </div>
+          <div class="app-body-content" style="align-items: center; justify-content: center;">
+            <div class="scratch-box-wrapper">
+              <div class="scratch-secret-body">
+                <div style="font-size: 1.8rem; margin-bottom: 2px;">💖</div>
+                <div style="font-size: 0.72rem; letter-spacing: 2px; color: var(--gold-primary); font-weight: 700;">FOR MY AKANSHA</div>
+                <p>"Borivali me uss black outfit me dekhne ke baad se, tumhara chehra mere dil se utra hi nahi! You are my forever happiness, Akansha 🥰✨"</p>
+                <div style="font-size: 0.8rem; color: var(--primary-blush); font-weight: 600;">— Rohan (Tumhara Favourite Mummu)</div>
+              </div>
+              <canvas id="scratch-ios-canvas" class="scratch-overlay-canvas"></canvas>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--gold-light); text-align: center; margin-top: 10px;">
+              👆 Ungli se rub karke secret padho!
+            </p>
+          </div>
         </div>
-        <div class="collage-thumbnail" style="--rot: 6deg;">
-          <img src="assets/photo3.jpg" alt="Akansha 3">
+
+        <!-- ==========================================================================
+             APP WINDOW 7: MUSIC (Now Playing)
+             ========================================================================== -->
+        <div id="app-music" class="ios-app-window">
+          <div class="app-nav-bar">
+            <button class="app-back-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              <span>Back</span>
+            </button>
+            <div class="app-nav-title">Now Playing 🎵</div>
+            <span style="font-size: 0.82rem; color: var(--primary-rose);">Live</span>
+          </div>
+          <div class="app-body-content" style="align-items: center; justify-content: center; text-align: center;">
+            <div style="width: 220px; height: 220px; border-radius: 50%; border: 3px solid var(--gold-primary); overflow: hidden; box-shadow: 0 0 35px var(--gold-glow); margin-bottom: 24px;">
+              <img src="assets/photo2.jpg" alt="Akansha" style="width: 100%; height: 100%; object-fit: cover; animation: spinVinyl 6s linear infinite;">
+            </div>
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: #fff; margin-bottom: 4px;">Dil Ye Bekarar Kyun Hai</h3>
+            <div style="font-size: 0.85rem; color: var(--gold-light); margin-bottom: 24px;">Mohit Chauhan & Shreya Ghoshal</div>
+            <div style="font-size: 0.95rem; color: var(--primary-blush); font-style: italic;">
+              "Is pe mera ikhtiyar kyun hai... jab se tum mili ho Akansha ❤️"
+            </div>
+          </div>
         </div>
-      </div>
 
-      <p class="celebration-message">
-        Ab doori khatam karne ka waqt aa gaya hai. Sirf 2 km door hain hum, Borivali me milne ka plan banana padega!<br>
-        Take a screenshot of this moment right now and send it to me!
-      </p>
+        <!-- ==========================================================================
+             4. FACETIME INCOMING CALL MODAL (The Climax Call!)
+             ========================================================================== -->
+        <div id="facetime-modal-view">
+          <div style="text-align: center;">
+            <div class="facetime-caller-avatar">
+              <img src="assets/photo2.jpg" alt="Rohan">
+            </div>
+            <div class="facetime-caller-name">Rohan Shukla ❤️</div>
+            <div class="facetime-call-type">Your Favourite Mummu is calling via FaceTime...</div>
+          </div>
 
-      <div class="celebration-mummu-badge">
-        ❤️ Handcrafted with all my heart by <strong>your favourite mummu</strong><br>
-        <span class="mummu-sub">(Rohan Shukla — Software Engineer)</span>
-      </div>
+          <div class="facetime-action-buttons">
+            <button id="btn-facetime-decline" class="facetime-btn btn-facetime-decline" title="Can't decline Mummu!">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.69-1.36-2.67-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg>
+            </button>
 
-      <button id="btn-fireworks-boost" class="btn-fireworks-boost interactive">
-        🎆 Tap for More Fireworks! 🎆
-      </button>
+            <button id="btn-facetime-accept" class="facetime-btn btn-facetime-accept" title="Answer with love">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 0 0-1.01.24l-1.57 1.97c-2.83-1.44-5.15-3.75-6.59-6.59l1.97-1.57c.26-.26.36-.65.25-1.01A11.36 11.36 0 0 1 8.56 4.4a1 1 0 0 0-1-1H4.4a1 1 0 0 0-1 1C3.4 13.56 10.44 20.6 19.01 20.6a1 1 0 0 0 1-1v-3.22a1 1 0 0 0-1-1z"/></svg>
+            </button>
+          </div>
+        </div>
 
-      <div class="celebration-actions" style="margin-top: 18px;">
-        <a id="whatsapp-share-link"
-          href="https://api.whatsapp.com/send?text=Maine%20YES%20bol%20diya%20hai!%20%E2%9D%A4%EF%B8%8F%20Ab%20jaldi%20se%20aao%20aur%20mujhe%20milne%20le%20chalo!%20%F0%9F%A5%B0%E2%9C%A8"
-          target="_blank" class="btn-whatsapp-share interactive">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path
-              d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z" />
-          </svg>
-          <span>Send on WhatsApp</span>
-        </a>
+        <!-- ==========================================================================
+             5. THE PROPOSAL CLIMAX
+             ========================================================================== -->
+        <div id="proposal-climax-view">
+          <div class="proposal-question-box">
+            <div style="font-size: 2.2rem; margin-bottom: 6px;">💍✨</div>
+            <h2 class="proposal-her-name">Akansha Mishra...</h2>
+            <h3 class="proposal-main-q">Kya tum meri girlfriend banogi?</h3>
+            <p class="proposal-english-sub">Will you make me the happiest person and say YES? ❤️</p>
 
-        <button id="btn-screenshot-badge" class="btn-screenshot-badge interactive">
-          <span>📸 Screenshot & Keep Forever</span>
-        </button>
+            <div class="proposal-action-buttons">
+              <button id="btn-ios-yes" class="btn-yes-huge">
+                YES! Hamesha ke liye ❤️
+              </button>
+              <button id="btn-ios-no" class="btn-no-runaway">
+                No 🙈
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================================================
+             6. CELEBRATION MODAL ON "YES"
+             ========================================================================== -->
+        <div id="celebration-screen-modal">
+          <div class="celebration-card-body">
+            <div style="font-size: 3rem; margin-bottom: 8px;">💍🎉</div>
+            <h2 style="font-family: var(--font-serif); font-size: 1.8rem; font-weight: 800; color: var(--gold-primary); margin-bottom: 4px;">MAINE KAHA THA NA! ❤️</h2>
+            <div style="font-size: 1rem; color: #fff; font-weight: 600; margin-bottom: 12px;">She Said YES! Now you are officially mine!</div>
+
+            <div class="celebration-photos-row">
+              <div class="celebration-thumb" style="transform: rotate(-5deg);">
+                <img src="assets/photo1.jpg" alt="Akansha 1">
+              </div>
+              <div class="celebration-thumb" style="transform: scale(1.1);">
+                <img src="assets/photo2.jpg" alt="Akansha 2">
+              </div>
+              <div class="celebration-thumb" style="transform: rotate(5deg);">
+                <img src="assets/photo3.jpg" alt="Akansha 3">
+              </div>
+            </div>
+
+            <p style="font-size: 0.88rem; color: var(--text-subtle); line-height: 1.5; margin-bottom: 14px;">
+              Ab doori khatam! Borivali se Dahisar sirf 2 km aur 5 minute ka rasta hai, ab to roz milna padega! Take a screenshot & send it to your favourite mummu right now!
+            </p>
+
+            <div class="celebration-signature-badge">
+              ❤️ Handcrafted with endless love by <strong>your favourite mummu</strong><br>
+              <span style="font-size: 0.75rem; color: var(--primary-blush);">(Rohan Shukla — Software Engineer)</span>
+            </div>
+
+            <button id="btn-fireworks-burst-ios" style="margin-top: 14px; width: 100%; padding: 12px; background: linear-gradient(135deg, #f5d061, #ff4d8d); color: #fff; border: none; border-radius: 999px; font-weight: 700; cursor: pointer; box-shadow: 0 8px 25px rgba(245, 208, 97, 0.4);">
+              🎆 Tap for Fireworks Magic! 🎆
+            </button>
+
+            <div>
+              <a href="https://api.whatsapp.com/send?text=Maine%20YES%20bol%20diya%20hai!%20%E2%9D%A4%EF%B8%8F%20Ab%20jaldi%20se%20aao%20aur%20mujhe%20milne%20le%20chalo!%20%F0%9F%A5%B0%E2%9C%A8" target="_blank" class="btn-whatsapp-send">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+                <span>Send on WhatsApp</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 
-  <!-- ==========================================================================
-       EASTER EGG MODAL (Tapped 5 times)
-       ========================================================================== -->
-  <div id="easter-egg-modal">
-    <div class="easter-egg-card">
-      <div style="font-size: 3rem; margin-bottom: 12px;">💖✨</div>
-      <h3>Secret Note for Akansha</h3>
-      <p>Agar tumne logo ko 5 baar tap kiya hai, iska matlab tum sach me bohot curious aur pyaari ho! You are truly the
-        most precious, gorgeous and lovely girl in this entire world.
-
-        Ek virtual flying kiss sirf tumhare liye: 😘💋✨</p>
-      <button id="easter-close-btn" class="easter-close-btn interactive">Close with a smile 😊</button>
-    </div>
-  </div>
-
-  <!-- Configuration and Script -->
+  <!-- Config and JS Engine -->
   <script src="config.js"></script>
   <script src="script.js"></script>
 </body>
-
 </html>
