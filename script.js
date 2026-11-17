@@ -1,906 +1,690 @@
 /**
  * ====================================================================
- *  AKANSHA & MUMMU - 30 ROMANTIC QUESTIONS QUIZ JAVASCRIPT ENGINE
- *  Handcrafted with Love by Rohan Shukla (Software Engineer)
+ *  SORRY AKANSHA - MAIN SCRIPT
+ *  Dedicated to Akansha Mishra from Rohan Shukla (Mummu)
  * ====================================================================
  */
 
-(function () {
-  'use strict';
+document.addEventListener('DOMContentLoaded', () => {
+  const config = window.SORRY_CONFIG || {};
 
-  const CFG = window.QUIZ_CONFIG || {};
-  const questions = CFG.questions || [];
+  // ==================================================================
+  // 1. POPULATE DYNAMIC CONTENT FROM CONFIG
+  // ==================================================================
 
-  // Audio References
-  const bgAudio = document.getElementById('quiz-bg-audio') || new Audio(CFG.audioSrc || 'assets/bg_music.mp3');
-  bgAudio.loop = true;
-  bgAudio.preload = 'auto';
-  let isMusicPlaying = false;
-  let audioContext = null;
+  // Populate Apology Letter
+  const letterEl = document.getElementById('letter-content');
+  if (letterEl && config.apologyLetter) {
+    letterEl.innerHTML = config.apologyLetter
+      .map((p, idx) => {
+        const isCoke = p.toLowerCase().includes('diet coke') || p.toLowerCase().includes('chilled');
+        return `<p class="${isCoke ? 'diet-coke-highlight' : ''}">${p}</p>`;
+      })
+      .join('');
+  }
 
-  // DOM Elements
-  const introModal = document.getElementById('intro-modal');
-  const btnStartQuiz = document.getElementById('btn-start-quiz');
-  const musicToggleBtn = document.getElementById('music-toggle-btn');
-  const badgeQuestionNum = document.getElementById('badge-question-num');
-  const loveScoreTxt = document.getElementById('love-score-txt');
-  const progressBarFill = document.getElementById('progress-bar-fill');
-  const cardCategoryTag = document.getElementById('card-category-tag');
-  const qCircleNum = document.getElementById('q-circle-num');
-  const qMainText = document.getElementById('q-main-text');
-  const milestoneContainer = document.getElementById('milestone-container');
-  const qOptionsContainer = document.getElementById('q-options-container');
-  const reactionBox = document.getElementById('reaction-box');
-  const reactionText = document.getElementById('reaction-text');
-  const screenshotActionStrip = document.getElementById('screenshot-action-strip');
-  const btnCopyAnswer = document.getElementById('btn-copy-answer');
-  const btnWhatsappAnswer = document.getElementById('btn-whatsapp-answer');
-  const btnPrevQ = document.getElementById('btn-prev-q');
-  const btnNextQ = document.getElementById('btn-next-q');
-  const counterCurrent = document.getElementById('counter-current');
+  // Populate Promises Grid
+  const promisesGrid = document.getElementById('promises-grid');
+  if (promisesGrid && config.cards) {
+    promisesGrid.innerHTML = config.cards
+      .map(
+        (card) => `
+      <div class="promise-card">
+        <div class="promise-emoji-wrap">${card.emoji}</div>
+        <h3 class="promise-title">${card.title}</h3>
+        <p class="promise-desc">${card.desc}</p>
+      </div>
+    `
+      )
+      .join('');
+  }
 
-  // Proposal & Celebration Elements
-  const proposalModal = document.getElementById('proposal-modal');
-  const btnProposalYes = document.getElementById('btn-proposal-yes');
-  const btnProposalNo = document.getElementById('btn-proposal-no');
-  const celebrationModal = document.getElementById('celebration-modal');
-  const flashOverlay = document.getElementById('flash-overlay');
-  const btnMoreFireworks = document.getElementById('btn-more-fireworks');
+  // Populate Scratch Card Secret
+  if (config.scratchNote) {
+    const titleEl = document.getElementById('contract-title');
+    const msgEl = document.getElementById('contract-message');
+    const signEl = document.getElementById('contract-sign');
+    if (titleEl) titleEl.textContent = config.scratchNote.title;
+    if (msgEl) msgEl.textContent = `"${config.scratchNote.message}"`;
+    if (signEl) signEl.textContent = config.scratchNote.sign;
+  }
 
-  // Quiz State
-  let currentIndex = 0;
-  const userAnswers = {}; // { questionId: { optionIndex: number, text: string } }
+  // Setup WhatsApp share button
+  const whatsappBtn = document.getElementById('whatsapp-btn');
+  if (whatsappBtn && config.whatsappText) {
+    const encodedMsg = encodeURIComponent(config.whatsappText);
+    whatsappBtn.href = `https://api.whatsapp.com/send?text=${encodedMsg}`;
+  }
 
-  /* ==========================================================================
-     1. AUDIO ENGINE & UNLOCK ON FIRST USER INTERACTION
-     ========================================================================== */
-  function initAudioContext() {
-    if (!audioContext) {
+  // ==================================================================
+  // 2. AUDIO & AUTOPLAY UNLOCK ENGINE
+  // ==================================================================
+  const audio = document.getElementById('bg-audio');
+  const musicPill = document.getElementById('music-pill');
+  const vinylDisc = document.getElementById('vinyl-disc');
+  const musicIcon = document.getElementById('music-icon');
+  const musicStatus = document.getElementById('music-status');
+  let audioUnlocked = false;
+
+  function updateAudioUI(isPlaying) {
+    if (isPlaying) {
+      vinylDisc.classList.add('spin');
+      musicIcon.textContent = '⏸️';
+      musicStatus.textContent = 'Now Playing ❤️';
+    } else {
+      vinylDisc.classList.remove('spin');
+      musicIcon.textContent = '▶️';
+      musicStatus.textContent = 'Tap to Play';
+    }
+  }
+
+  function playAudio() {
+    if (!audio) return;
+    audio
+      .play()
+      .then(() => {
+        audioUnlocked = true;
+        updateAudioUI(true);
+      })
+      .catch(() => {
+        updateAudioUI(false);
+      });
+  }
+
+  function toggleAudio() {
+    if (!audio) return;
+    if (audio.paused) {
+      playAudio();
+    } else {
+      audio.pause();
+      updateAudioUI(false);
+    }
+  }
+
+  if (musicPill) {
+    musicPill.addEventListener('click', toggleAudio);
+  }
+
+  // Global user gesture unlocker for background music
+  function unlockOnGesture() {
+    if (!audioUnlocked && audio) {
+      playAudio();
+    }
+    // Remove listeners once attempted
+    window.removeEventListener('pointerdown', unlockOnGesture);
+    window.removeEventListener('touchstart', unlockOnGesture);
+    window.removeEventListener('click', unlockOnGesture);
+    window.removeEventListener('scroll', unlockOnGesture);
+  }
+
+  window.addEventListener('pointerdown', unlockOnGesture, { once: true });
+  window.addEventListener('touchstart', unlockOnGesture, { once: true });
+  window.addEventListener('click', unlockOnGesture, { once: true });
+  window.addEventListener('scroll', unlockOnGesture, { once: true });
+
+  // Try initial autoplay
+  playAudio();
+
+  // ==================================================================
+  // 3. BACKGROUND PARTICLES (HEARTS, STARS & FIZZ BUBBLES)
+  // ==================================================================
+  const pCanvas = document.getElementById('particles-canvas');
+  if (pCanvas) {
+    const pCtx = pCanvas.getContext('2d');
+    let pWidth = (pCanvas.width = window.innerWidth);
+    let pHeight = (pCanvas.height = window.innerHeight);
+
+    window.addEventListener('resize', () => {
+      pWidth = pCanvas.width = window.innerWidth;
+      pHeight = pCanvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const particleTypes = ['bubble', 'heart', 'star'];
+    const hearts = ['❤️', '💖', '💕', '✨'];
+
+    for (let i = 0; i < 40; i++) {
+      particles.push({
+        x: Math.random() * pWidth,
+        y: Math.random() * pHeight,
+        type: particleTypes[Math.floor(Math.random() * particleTypes.length)],
+        size: Math.random() * 12 + 6,
+        speedY: Math.random() * 0.8 + 0.3,
+        speedX: (Math.random() - 0.5) * 0.4,
+        opacity: Math.random() * 0.5 + 0.2,
+        char: hearts[Math.floor(Math.random() * hearts.length)]
+      });
+    }
+
+    function animateParticles() {
+      pCtx.clearRect(0, 0, pWidth, pHeight);
+
+      particles.forEach((p) => {
+        p.y -= p.speedY;
+        p.x += p.speedX;
+
+        // Reset if off screen
+        if (p.y < -30) {
+          p.y = pHeight + 20;
+          p.x = Math.random() * pWidth;
+        }
+
+        pCtx.save();
+        pCtx.globalAlpha = p.opacity;
+
+        if (p.type === 'bubble') {
+          pCtx.beginPath();
+          pCtx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+          pCtx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+          pCtx.fill();
+          pCtx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+          pCtx.lineWidth = 1;
+          pCtx.stroke();
+        } else if (p.type === 'heart') {
+          pCtx.font = `${p.size}px sans-serif`;
+          pCtx.fillText(p.char, p.x, p.y);
+        } else {
+          pCtx.fillStyle = 'rgba(255, 209, 102, 0.6)';
+          pCtx.beginPath();
+          pCtx.arc(p.x, p.y, p.size / 4, 0, Math.PI * 2);
+          pCtx.fill();
+        }
+
+        pCtx.restore();
+      });
+
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+  }
+
+  // ==================================================================
+  // 4. SYNTHETIC AUDIO POP SOUND (Web Audio API for Diet Coke Can)
+  // ==================================================================
+  function playCokePopSound() {
+    try {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (AudioCtx) audioContext = new AudioCtx();
-    }
-    if (audioContext && audioContext.state === 'suspended') {
-      audioContext.resume();
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+
+      // Sharp "Pop" Click
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(320, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.08);
+
+      gain.gain.setValueAtTime(0.7, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.09);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.1);
+
+      // Fizzy hiss noise
+      const bufferSize = ctx.sampleRate * 0.4;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'highpass';
+      filter.frequency.setValueAtTime(1200, ctx.currentTime);
+
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.25, ctx.currentTime + 0.05);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+
+      noise.connect(filter);
+      filter.connect(noiseGain);
+      noiseGain.connect(ctx.destination);
+
+      noise.start(ctx.currentTime + 0.05);
+      noise.stop(ctx.currentTime + 0.5);
+    } catch (e) {
+      // Audio context might fail on older browsers silently
     }
   }
 
-  function playMusic() {
-    initAudioContext();
-    bgAudio.muted = false;
-    bgAudio.volume = 0.85;
-    const p = bgAudio.play();
-    if (p !== undefined) {
-      p.then(() => {
-        isMusicPlaying = true;
-        updateMusicUI();
-      }).catch(() => {
-        bgAudio.muted = true;
-        bgAudio.play().then(() => {
-          setupUnmuteTrigger();
-        }).catch(() => {
-          setupGlobalAudioTriggers();
-        });
-      });
-    }
-  }
+  // ==================================================================
+  // 5. INTERACTIVE 3D DIET COKE CAN
+  // ==================================================================
+  const cokeCan = document.getElementById('coke-can');
+  const fizzContainer = document.getElementById('fizz-container');
+  const rewardCard = document.getElementById('coke-reward-card');
+  let canPopped = false;
 
-  function setupUnmuteTrigger() {
-    const unmute = () => {
-      bgAudio.muted = false;
-      bgAudio.volume = 0.85;
-      isMusicPlaying = true;
-      updateMusicUI();
-      ['pointerdown', 'touchstart', 'touchend', 'mousedown', 'scroll', 'click'].forEach((evt) => {
-        window.removeEventListener(evt, unmute, { capture: true });
-        document.removeEventListener(evt, unmute, { capture: true });
-      });
-    };
-    ['pointerdown', 'touchstart', 'touchend', 'mousedown', 'scroll', 'click'].forEach((evt) => {
-      window.addEventListener(evt, unmute, { capture: true, once: true });
-      document.addEventListener(evt, unmute, { capture: true, once: true });
-    });
-  }
+  function burstCanFizz() {
+    if (!fizzContainer) return;
+    const colors = ['#ffffff', '#ff4d79', '#e01a22', '#ffd166'];
+    const emojis = ['🥤', '❤️', '✨', '🫧'];
 
-  function setupGlobalAudioTriggers() {
-    const gestureEvents = ['pointerdown', 'touchstart', 'touchend', 'mousedown', 'scroll', 'click'];
-    function triggerStart() {
-      initAudioContext();
-      bgAudio.muted = false;
-      bgAudio.volume = 0.85;
-      bgAudio.play().then(() => {
-        isMusicPlaying = true;
-        updateMusicUI();
-        cleanupTriggers();
-      }).catch(() => {});
-    }
-    function cleanupTriggers() {
-      gestureEvents.forEach((evt) => {
-        window.removeEventListener(evt, triggerStart, { capture: true });
-        document.removeEventListener(evt, triggerStart, { capture: true });
-      });
-    }
-    gestureEvents.forEach((evt) => {
-      window.addEventListener(evt, triggerStart, { capture: true, passive: true });
-      document.addEventListener(evt, triggerStart, { capture: true, passive: true });
-    });
-  }
+    for (let i = 0; i < 22; i++) {
+      const bubble = document.createElement('div');
+      bubble.className = 'fizz-bubble';
 
-  function updateMusicUI() {
-    if (musicToggleBtn) {
-      if (isMusicPlaying) {
-        musicToggleBtn.classList.add('active');
+      const isEmoji = Math.random() > 0.55;
+      if (isEmoji) {
+        bubble.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        bubble.style.fontSize = `${Math.random() * 14 + 10}px`;
       } else {
-        musicToggleBtn.classList.remove('active');
-      }
-    }
-  }
-
-  if (musicToggleBtn) {
-    musicToggleBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      initAudioContext();
-      if (isMusicPlaying) {
-        bgAudio.pause();
-        isMusicPlaying = false;
-      } else {
-        bgAudio.muted = false;
-        bgAudio.play();
-        isMusicPlaying = true;
-      }
-      updateMusicUI();
-    });
-  }
-
-  // Play music immediately + set fallback listeners
-  playMusic();
-  setupGlobalAudioTriggers();
-
-  // Intro Start Button Click
-  if (btnStartQuiz) {
-    btnStartQuiz.addEventListener('click', () => {
-      playMusic();
-      if (introModal) introModal.classList.add('hidden');
-    });
-  }
-
-  /* ==========================================================================
-     2. QUIZ ENGINE & RENDERING (30 Questions)
-     ========================================================================== */
-  function renderQuestion(index) {
-    if (index < 0 || index >= questions.length) return;
-    const q = questions[index];
-
-    // If Question 30 (Proposal Climax)
-    if (q.type === 'proposal-climax' || index === 29) {
-      openProposalModal();
-      return;
-    }
-
-    // Update Headers & Counter
-    const qNum = index + 1;
-    if (badgeQuestionNum) badgeQuestionNum.textContent = `Question ${qNum} of 30`;
-    if (counterCurrent) counterCurrent.textContent = qNum;
-    if (cardCategoryTag) cardCategoryTag.textContent = q.category || 'Love Quiz ✨';
-    if (qCircleNum) qCircleNum.textContent = qNum;
-    if (qMainText) qMainText.textContent = q.question;
-
-    // Progress Bar Fill & Love Score
-    const percent = ((qNum) / 30) * 100;
-    if (progressBarFill) progressBarFill.style.width = `${percent}%`;
-    const scoreVal = Math.min(100, Math.round(percent + (Object.keys(userAnswers).length > 5 ? 10 : 0)));
-    if (loveScoreTxt) loveScoreTxt.textContent = `${scoreVal}%`;
-
-    // Milestone Handling
-    renderMilestone(q);
-
-    // Render Options
-    if (qOptionsContainer) {
-      qOptionsContainer.innerHTML = '';
-      const letters = ['A', 'B', 'C', 'D'];
-      const currentSelected = userAnswers[q.id];
-
-      q.options.forEach((optText, optIdx) => {
-        const btn = document.createElement('button');
-        btn.className = 'q-option-btn';
-        if (currentSelected && currentSelected.optionIndex === optIdx) {
-          btn.classList.add('selected');
-        }
-
-        btn.innerHTML = `
-          <div class="option-badge">${letters[optIdx] || '•'}</div>
-          <div class="option-text">${optText}</div>
-        `;
-
-        btn.addEventListener('click', () => {
-          handleOptionSelect(q, optIdx, optText);
-        });
-
-        qOptionsContainer.appendChild(btn);
-      });
-    }
-
-    // Reaction Box & Screenshot Strip State
-    if (userAnswers[q.id]) {
-      showReactionAndScreenshot(q, userAnswers[q.id].text);
-    } else {
-      if (reactionBox) reactionBox.classList.add('hidden');
-      if (screenshotActionStrip) screenshotActionStrip.classList.add('hidden');
-    }
-
-    // Update Navigation Buttons
-    if (btnPrevQ) btnPrevQ.disabled = (index === 0);
-    if (btnNextQ) {
-      btnNextQ.innerHTML = (index === 28) ? 'Question 30: Grand Finale 💍' : 'Next Question ➡️';
-    }
-
-    // Scroll card smoothly into view
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function handleOptionSelect(q, optIdx, optText) {
-    userAnswers[q.id] = { optionIndex: optIdx, text: optText };
-
-    // Update active class on options
-    if (qOptionsContainer) {
-      const allButtons = qOptionsContainer.querySelectorAll('.q-option-btn');
-      allButtons.forEach((b, i) => {
-        b.classList.toggle('selected', i === optIdx);
-      });
-    }
-
-    // Mini confetti burst
-    if (typeof confetti === 'function') {
-      confetti({
-        particleCount: 20,
-        spread: 60,
-        origin: { y: 0.7 },
-        colors: ['#ff4d8d', '#f5d061', '#ffffff']
-      });
-    }
-
-    // Vibrate gently if supported
-    if ('vibrate' in navigator) {
-      try { navigator.vibrate(30); } catch (e) {}
-    }
-
-    showReactionAndScreenshot(q, optText);
-  }
-
-  function showReactionAndScreenshot(q, selectedAnswerText) {
-    // Show Mummu's reaction
-    if (reactionBox && reactionText) {
-      reactionText.textContent = q.mummuReaction || "Sach bolun toh tumhara ye answer sunke dil khush ho gaya! ❤️";
-      reactionBox.classList.remove('hidden');
-    }
-
-    // Show Screenshot & WhatsApp Strip
-    if (screenshotActionStrip) {
-      screenshotActionStrip.classList.remove('hidden');
-
-      // WhatsApp formatted message
-      if (btnWhatsappAnswer) {
-        const waMsg = `Mummu! Maine Question ${q.id} ka answer diya:\n"${selectedAnswerText}"\n❤️ (Borivali ⇄ Dahisar)`;
-        btnWhatsappAnswer.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(waMsg)}`;
+        const size = Math.random() * 12 + 6;
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
+        bubble.style.boxShadow = '0 0 6px rgba(255, 255, 255, 0.8)';
       }
 
-      // Copy Answer Button
-      if (btnCopyAnswer) {
-        btnCopyAnswer.onclick = () => {
-          const copyMsg = `Question ${q.id}: ${q.question}\nAkansha's Answer: "${selectedAnswerText}"\n❤️ Specially for Mummu!`;
-          if (navigator.clipboard) {
-            navigator.clipboard.writeText(copyMsg).then(() => {
-              btnCopyAnswer.innerHTML = '<span>✅ Copied! Ab SS leke bhejo 📸</span>';
-              setTimeout(() => {
-                btnCopyAnswer.innerHTML = '<span>📋 Copy Answer</span>';
-              }, 2500);
-            });
-          }
-        };
-      }
+      bubble.style.left = '50%';
+      bubble.style.top = '10px';
+
+      const angle = (Math.random() * Math.PI) + Math.PI; // Upward arc
+      const dist = Math.random() * 130 + 50;
+      const tx = Math.cos(angle) * dist;
+      const ty = Math.sin(angle) * dist;
+
+      bubble.style.setProperty('--tx', `${tx}px`);
+      bubble.style.setProperty('--ty', `${ty}px`);
+
+      fizzContainer.appendChild(bubble);
+
+      setTimeout(() => {
+        bubble.remove();
+      }, 1250);
     }
   }
 
-  /* ==========================================================================
-     3. MILESTONE EMBEDS (Photos, Videos, Scratch Card)
-     ========================================================================== */
-  function renderMilestone(q) {
-    if (!milestoneContainer) return;
-    milestoneContainer.innerHTML = '';
+  if (cokeCan) {
+    cokeCan.addEventListener('click', () => {
+      cokeCan.classList.remove('popped');
+      void cokeCan.offsetWidth; // Trigger reflow
+      cokeCan.classList.add('popped');
 
-    if (q.type === 'photo-milestone') {
-      milestoneContainer.classList.remove('hidden');
-      milestoneContainer.innerHTML = `
-        <div class="photos-milestone-grid">
-          <div class="milestone-photo-card hero-photo">
-            <img src="${CFG.media?.photo2 || 'assets/photo2.jpg'}" alt="Akansha Portrait">
-          </div>
-          <div class="milestone-photo-card">
-            <img src="${CFG.media?.photo1 || 'assets/photo1.jpg'}" alt="Akansha Smiling">
-          </div>
-          <div class="milestone-photo-card">
-            <img src="${CFG.media?.photo2 || 'assets/photo2.jpg'}" alt="Akansha Close-up">
-          </div>
-          <div class="milestone-photo-card">
-            <img src="${CFG.media?.photo3 || 'assets/photo3.jpg'}" alt="Akansha Elegance">
-          </div>
-        </div>
-      `;
-    } else if (q.type === 'video1-milestone') {
-      milestoneContainer.classList.remove('hidden');
-      milestoneContainer.innerHTML = `
-        <div class="video-milestone-wrapper">
-          <button id="unmute-vid-1" class="video-unmute-btn">🔊 Tap to Unmute</button>
-          <video id="milestone-vid-1" playsinline muted loop autoplay preload="auto">
-            <source src="${CFG.media?.video1 || 'assets/video.mp4'}" type="video/mp4">
-          </video>
-        </div>
-      `;
-      setupMilestoneVideo('milestone-vid-1', 'unmute-vid-1');
-    } else if (q.type === 'video2-milestone') {
-      milestoneContainer.classList.remove('hidden');
-      milestoneContainer.innerHTML = `
-        <div class="video-milestone-wrapper">
-          <button id="unmute-vid-2" class="video-unmute-btn">🔊 Tap to Unmute</button>
-          <video id="milestone-vid-2" playsinline muted loop autoplay preload="auto">
-            <source src="${CFG.media?.video2 || 'assets/video2.mp4'}" type="video/mp4">
-          </video>
-        </div>
-      `;
-      setupMilestoneVideo('milestone-vid-2', 'unmute-vid-2');
-    } else if (q.type === 'scratch-milestone') {
-      milestoneContainer.classList.remove('hidden');
-      milestoneContainer.innerHTML = `
-        <div class="scratch-milestone-wrapper">
-          <div class="scratch-secret-content">
-            <h4>✨ FOR MY FOREVER AKANSHA ✨</h4>
-            <p>"Borivali me uss black outfit me dekhne ke baad se, tumhara chehra mere dil se utra hi nahi! You are my forever happiness, Akansha 🥰✨"</p>
-            <div style="font-size:0.75rem; color:var(--gold-primary); margin-top:4px;">— Rohan (Your Favourite Mummu)</div>
-          </div>
-          <canvas id="scratch-canvas" class="scratch-canvas-overlay"></canvas>
-        </div>
-        <div style="text-align:center; font-size:0.78rem; color:var(--gold-light); margin-bottom:10px;">
-          👆 Ungli ya mouse se gold layer ko scratch karo!
-        </div>
-      `;
-      setTimeout(initScratchCard, 100);
-    } else {
-      milestoneContainer.classList.add('hidden');
-    }
-  }
+      playCokePopSound();
+      burstCanFizz();
 
-  function setupMilestoneVideo(videoId, btnId) {
-    const vid = document.getElementById(videoId);
-    const btn = document.getElementById(btnId);
-    if (!vid || !btn) return;
-
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      vid.muted = !vid.muted;
-      btn.textContent = vid.muted ? '🔊 Tap to Unmute' : '🔇 Mute Video';
-      if (!vid.muted && bgAudio) {
-        bgAudio.volume = 0.25;
-      } else if (bgAudio) {
-        bgAudio.volume = 0.85;
-      }
-    });
-
-    vid.addEventListener('click', () => {
-      if (vid.paused) vid.play();
-      else vid.pause();
-    });
-  }
-
-  function initScratchCard() {
-    const canvas = document.getElementById('scratch-canvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const container = canvas.parentElement;
-
-    let isDrawing = false;
-    let isRevealed = false;
-
-    const rect = container.getBoundingClientRect();
-    if (rect.width === 0 || rect.height === 0) return;
-    canvas.width = rect.width;
-    canvas.height = rect.height;
-
-    // Metallic rose-gold scratch layer
-    const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-    grad.addColorStop(0, '#d4af37');
-    grad.addColorStop(0.3, '#fbe396');
-    grad.addColorStop(0.6, '#ff80ab');
-    grad.addColorStop(1, '#c28833');
-
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Decorative sparkles
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-    for (let i = 0; i < 30; i++) {
-      ctx.beginPath();
-      ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 3 + 1, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    ctx.fillStyle = '#260e22';
-    ctx.font = 'bold 14px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('✨ 🪙 Scratch Karo Akansha! 🪙 ✨', canvas.width / 2, canvas.height / 2 - 6);
-
-    ctx.font = '11px sans-serif';
-    ctx.fillStyle = '#42163b';
-    ctx.fillText('(Rub with finger or mouse)', canvas.width / 2, canvas.height / 2 + 14);
-
-    function scratch(e) {
-      if (!isDrawing || isRevealed) return;
-      const cRect = canvas.getBoundingClientRect();
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-      const x = clientX - cRect.left;
-      const y = clientY - cRect.top;
-
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.beginPath();
-      ctx.arc(x, y, 24, 0, Math.PI * 2);
-      ctx.fill();
-
-      checkPercent();
-    }
-
-    let checkThrottle = 0;
-    function checkPercent() {
-      if (isRevealed) return;
-      checkThrottle++;
-      if (checkThrottle % 15 !== 0) return;
-
-      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const pixels = imgData.data;
-      let clearPixels = 0;
-      const total = pixels.length / 4;
-
-      for (let i = 3; i < pixels.length; i += 16) {
-        if (pixels[i] === 0) clearPixels += 4;
-      }
-
-      if (clearPixels / total > 0.35) {
-        isRevealed = true;
-        canvas.style.opacity = '0';
-        canvas.style.pointerEvents = 'none';
-        if (typeof confetti === 'function') {
-          confetti({
-            particleCount: 50,
-            spread: 80,
-            origin: { y: 0.6 },
-            colors: ['#ff4d8d', '#f5d061', '#ffffff']
-          });
+      if (!canPopped) {
+        canPopped = true;
+        if (rewardCard) {
+          setTimeout(() => {
+            rewardCard.style.display = 'block';
+          }, 350);
         }
       }
-    }
-
-    canvas.addEventListener('mousedown', (e) => { isDrawing = true; scratch(e); });
-    canvas.addEventListener('mousemove', scratch);
-    window.addEventListener('mouseup', () => { isDrawing = false; });
-
-    canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); }, { passive: false });
-    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); scratch(e); }, { passive: false });
-    canvas.addEventListener('touchend', () => { isDrawing = false; });
-  }
-
-  // Previous & Next Button Listeners
-  if (btnPrevQ) {
-    btnPrevQ.addEventListener('click', () => {
-      if (currentIndex > 0) {
-        currentIndex--;
-        renderQuestion(currentIndex);
-      }
     });
   }
 
-  if (btnNextQ) {
-    btnNextQ.addEventListener('click', () => {
-      if (currentIndex < questions.length - 1) {
-        currentIndex++;
-        renderQuestion(currentIndex);
-      } else {
-        openProposalModal();
-      }
-    });
-  }
+  // ==================================================================
+  // 6. INTERACTIVE SCRATCH CARD ENGINE
+  // ==================================================================
+  const scratchCanvas = document.getElementById('scratch-canvas');
+  const scratchHint = document.getElementById('scratch-hint');
 
-  /* ==========================================================================
-     4. QUESTION 30: THE GRAND FINALE PROPOSAL CLIMAX
-     ========================================================================== */
-  function openProposalModal() {
-    if (proposalModal) {
-      proposalModal.classList.remove('hidden');
-    }
-  }
+  if (scratchCanvas) {
+    const sCtx = scratchCanvas.getContext('2d');
+    const container = scratchCanvas.parentElement;
 
-  const noResponses = [
-    "No 🙈",
-    "Are you sure? 🥺",
-    "Ek baar aur soch lo...",
-    "Pakka? Mummu ro dega 😭",
-    "Galat button dab gaya shayad?",
-    "Aise mat karo na please...",
-    "Ab toh YES hi dabana padega! 😏",
-    "Mummu sirf tumhara hai! ❤️"
-  ];
-
-  let noAttemptCount = 0;
-  let yesScale = 1.0;
-
-  function evadeNoButton(e) {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    noAttemptCount++;
-
-    if ('vibrate' in navigator) {
-      try { navigator.vibrate([30, 40, 30]); } catch (err) {}
+    function resizeScratchCanvas() {
+      const rect = container.getBoundingClientRect();
+      scratchCanvas.width = rect.width;
+      scratchCanvas.height = rect.height;
+      paintScratchFoil();
     }
 
-    const box = document.querySelector('.proposal-box');
-    if (box && btnProposalNo) {
-      const boxRect = box.getBoundingClientRect();
-      const btnRect = btnProposalNo.getBoundingClientRect();
+    function paintScratchFoil() {
+      const w = scratchCanvas.width;
+      const h = scratchCanvas.height;
 
-      const maxX = boxRect.width - btnRect.width - 40;
-      const randomX = (Math.random() - 0.5) * maxX;
-      const randomY = (Math.random() - 0.5) * 80;
+      // Metallic Silver-Rose gradient foil
+      const grad = sCtx.createLinearGradient(0, 0, w, h);
+      grad.addColorStop(0, '#c7cdd4');
+      grad.addColorStop(0.3, '#ffffff');
+      grad.addColorStop(0.5, '#b0b6be');
+      grad.addColorStop(0.8, '#ffccd5');
+      grad.addColorStop(1, '#949ba4');
 
-      const shrinkFactor = Math.max(0.65, 1 - noAttemptCount * 0.05);
+      sCtx.fillStyle = grad;
+      sCtx.fillRect(0, 0, w, h);
 
-      btnProposalNo.style.position = 'relative';
-      btnProposalNo.style.transform = `translate(${randomX}px, ${randomY}px) scale(${shrinkFactor})`;
-
-      const nextTextIndex = Math.min(noAttemptCount, noResponses.length - 1);
-      btnProposalNo.textContent = noResponses[nextTextIndex];
-
-      yesScale += 0.08;
-      if (btnProposalYes) {
-        btnProposalYes.style.transform = `scale(${yesScale})`;
-        btnProposalYes.style.boxShadow = `0 15px ${35 + noAttemptCount * 6}px rgba(255, 77, 141, 0.8)`;
-      }
-
-      if (noAttemptCount >= 8) {
-        btnProposalNo.style.display = 'none';
-      }
-    }
-  }
-
-  if (btnProposalNo) {
-    btnProposalNo.addEventListener('mouseenter', evadeNoButton);
-    btnProposalNo.addEventListener('touchstart', evadeNoButton, { passive: false });
-    btnProposalNo.addEventListener('click', evadeNoButton);
-  }
-
-  if (btnProposalYes) {
-    btnProposalYes.addEventListener('click', () => {
-      // Camera Flash
-      if (flashOverlay) {
-        flashOverlay.classList.add('active');
-        setTimeout(() => flashOverlay.classList.remove('active'), 400);
-      }
-
-      // Hide Proposal Modal
-      if (proposalModal) proposalModal.classList.add('hidden');
-
-      // Launch Fireworks
-      launchRocket(fwWidth * 0.25, fwHeight * 0.3, 'heart');
-      launchRocket(fwWidth * 0.5, fwHeight * 0.22, 'heart');
-      launchRocket(fwWidth * 0.75, fwHeight * 0.32, 'heart');
-      setTimeout(() => {
-        launchRocket(fwWidth * 0.35, fwHeight * 0.28, 'peony');
-        launchRocket(fwWidth * 0.65, fwHeight * 0.25, 'heart');
-      }, 350);
-
-      // Continuous rocket waves
-      if (fwAutoLaunchTimer) clearInterval(fwAutoLaunchTimer);
-      fwAutoLaunchTimer = setInterval(() => {
-        const isHeart = Math.random() > 0.35;
-        launchRocket(null, null, isHeart ? 'heart' : 'peony');
-      }, 800);
-
-      // Confetti storm
-      fireworksExplosion();
-
-      // Open Celebration Modal
-      setTimeout(() => {
-        if (celebrationModal) celebrationModal.classList.remove('hidden');
-      }, 600);
-    });
-  }
-
-  if (btnMoreFireworks) {
-    btnMoreFireworks.addEventListener('click', (e) => {
-      e.stopPropagation();
-      launchRocket(fwWidth * 0.5, fwHeight * 0.25, 'heart');
-      setTimeout(() => launchRocket(fwWidth * 0.3, fwHeight * 0.3, 'peony'), 150);
-      setTimeout(() => launchRocket(fwWidth * 0.7, fwHeight * 0.3, 'heart'), 300);
-      if (typeof confetti === 'function') {
-        confetti({
-          particleCount: 60,
-          spread: 120,
-          origin: { y: 0.5 },
-          colors: ['#ff4d8d', '#f5d061', '#ffffff']
-        });
-      }
-    });
-  }
-
-  /* ==========================================================================
-     5. CINEMATIC 3D PARTICLES FIREWORKS ENGINE
-     ========================================================================== */
-  const fwCanvas = document.getElementById('fireworks-canvas');
-  let fwCtx = fwCanvas ? fwCanvas.getContext('2d') : null;
-  let fwWidth = 0, fwHeight = 0;
-  const rockets = [];
-  const fwParticles = [];
-  let fwRunning = false;
-  let fwAutoLaunchTimer = null;
-
-  function initFireworksCanvas() {
-    if (!fwCanvas) return;
-    fwWidth = fwCanvas.width = window.innerWidth;
-    fwHeight = fwCanvas.height = window.innerHeight;
-    window.addEventListener('resize', () => {
-      if (!fwCanvas) return;
-      fwWidth = fwCanvas.width = window.innerWidth;
-      fwHeight = fwCanvas.height = window.innerHeight;
-    });
-  }
-  initFireworksCanvas();
-
-  const fwColorSets = [
-    ['#ff4d8d', '#ff1493', '#ffd1dc', '#ffffff'],
-    ['#f5d061', '#ffe58f', '#fff3c4', '#ffffff'],
-    ['#a855f7', '#d946ef', '#f472b6', '#ffffff'],
-    ['#ff3366', '#f5d061', '#ffffff', '#ff99bb']
-  ];
-
-  class Rocket {
-    constructor(startX, startY, targetX, targetY, burstType) {
-      this.x = startX;
-      this.y = startY;
-      this.targetX = targetX;
-      this.targetY = targetY;
-      this.burstType = burstType || (Math.random() > 0.4 ? 'heart' : 'peony');
-      this.colors = fwColorSets[Math.floor(Math.random() * fwColorSets.length)];
-
-      const dx = targetX - startX;
-      const dy = targetY - startY;
-      const dist = Math.hypot(dx, dy) || 1;
-      const speed = Math.random() * 3 + 12;
-      this.vx = (dx / dist) * speed;
-      this.vy = (dy / dist) * speed;
-      this.trail = [];
-      this.alive = true;
-    }
-
-    update() {
-      this.trail.push({ x: this.x, y: this.y, alpha: 1 });
-      if (this.trail.length > 5) this.trail.shift();
-
-      this.x += this.vx;
-      this.y += this.vy;
-      this.vy += 0.05;
-
-      if (this.y <= this.targetY || this.vy >= 0) {
-        this.alive = false;
-        explodeAt(this.x, this.y, this.burstType, this.colors);
-      }
-    }
-
-    draw(ctx) {
-      ctx.save();
-      for (let i = 0; i < this.trail.length; i++) {
-        const p = this.trail[i];
-        ctx.fillStyle = `rgba(245, 208, 97, ${p.alpha * (i / this.trail.length)})`;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, 3.5, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
-  }
-
-  class FireworkParticle {
-    constructor(x, y, vx, vy, color, isGlitter) {
-      this.x = x;
-      this.y = y;
-      this.vx = vx;
-      this.vy = vy;
-      this.color = color;
-      this.isGlitter = isGlitter;
-      this.alpha = 1;
-      this.decay = Math.random() * 0.016 + 0.011;
-      this.gravity = isGlitter ? 0.05 : 0.08;
-      this.drag = 0.96;
-      this.size = Math.random() * 2.6 + 1.6;
-      this.trail = [];
-    }
-
-    update() {
-      this.trail.push({ x: this.x, y: this.y });
-      if (this.trail.length > 4) this.trail.shift();
-
-      this.vx *= this.drag;
-      this.vy *= this.drag;
-      this.vy += this.gravity;
-
-      this.x += this.vx;
-      this.y += this.vy;
-      this.alpha -= this.decay;
-    }
-
-    draw(ctx) {
-      if (this.alpha <= 0) return;
-      ctx.save();
-      ctx.globalAlpha = this.alpha;
-      ctx.strokeStyle = this.color;
-      ctx.lineWidth = this.size;
-      ctx.beginPath();
-      if (this.trail.length > 1) {
-        ctx.moveTo(this.trail[0].x, this.trail[0].y);
-        for (let t of this.trail) ctx.lineTo(t.x, t.y);
-      } else {
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      }
-      ctx.stroke();
-
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size * 0.5, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
-  }
-
-  function explodeAt(x, y, burstType, colors) {
-    if (burstType === 'heart') {
-      const particleCount = 75;
-      for (let i = 0; i < particleCount; i++) {
-        const t = (i / particleCount) * Math.PI * 2;
-        const hx = 16 * Math.pow(Math.sin(t), 3);
-        const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-        const speed = Math.random() * 0.25 + 0.35;
-        const color = colors[i % colors.length];
-        fwParticles.push(new FireworkParticle(x, y, hx * speed, hy * speed, color, true));
-      }
-    } else {
-      const count = 95;
-      for (let i = 0; i < count; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 6.5 + 1.5;
-        const vx = Math.cos(angle) * speed;
-        const vy = Math.sin(angle) * speed;
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        fwParticles.push(new FireworkParticle(x, y, vx, vy, color, Math.random() > 0.5));
-      }
-    }
-  }
-
-  function renderFireworksLoop() {
-    if (!fwCtx) return;
-    fwCtx.save();
-    fwCtx.globalCompositeOperation = 'destination-out';
-    fwCtx.fillStyle = 'rgba(0, 0, 0, 0.22)';
-    fwCtx.fillRect(0, 0, fwWidth, fwHeight);
-    fwCtx.restore();
-
-    fwCtx.save();
-    fwCtx.globalCompositeOperation = 'lighter';
-
-    for (let i = rockets.length - 1; i >= 0; i--) {
-      const r = rockets[i];
-      r.update();
-      r.draw(fwCtx);
-      if (!r.alive) rockets.splice(i, 1);
-    }
-
-    for (let i = fwParticles.length - 1; i >= 0; i--) {
-      const p = fwParticles[i];
-      p.update();
-      p.draw(fwCtx);
-      if (p.alpha <= 0) fwParticles.splice(i, 1);
-    }
-
-    fwCtx.restore();
-
-    if (fwRunning || rockets.length > 0 || fwParticles.length > 0) {
-      requestAnimationFrame(renderFireworksLoop);
-    }
-  }
-
-  function launchRocket(targetX, targetY, burstType) {
-    if (!fwCanvas) return;
-    const startX = (Math.random() * 0.6 + 0.2) * fwWidth;
-    const startY = fwHeight + 20;
-    const tx = targetX || (Math.random() * 0.7 + 0.15) * fwWidth;
-    const ty = targetY || (Math.random() * 0.45 + 0.15) * fwHeight;
-    rockets.push(new Rocket(startX, startY, tx, ty, burstType));
-    if (!fwRunning) {
-      fwRunning = true;
-      requestAnimationFrame(renderFireworksLoop);
-    }
-  }
-
-  function fireworksExplosion() {
-    if (typeof confetti === 'function') {
-      const duration = 6 * 1000;
-      const animationEnd = Date.now() + duration;
-
-      const interval = setInterval(function () {
-        const timeLeft = animationEnd - Date.now();
-        if (timeLeft <= 0) return clearInterval(interval);
-
-        confetti({
-          particleCount: 25,
-          angle: 60,
-          spread: 55,
-          origin: { x: 0, y: 0.8 },
-          colors: ['#ff4d8d', '#f5d061', '#ffffff']
-        });
-        confetti({
-          particleCount: 25,
-          angle: 120,
-          spread: 55,
-          origin: { x: 1, y: 0.8 },
-          colors: ['#ff4d8d', '#f5d061', '#ffffff']
-        });
-      }, 280);
-    }
-  }
-
-  /* ==========================================================================
-     6. BACKGROUND TWINKLING STARS
-     ========================================================================== */
-  const starsCanvas = document.getElementById('stars-canvas');
-  if (starsCanvas) {
-    const sCtx = starsCanvas.getContext('2d');
-    let sWidth = (starsCanvas.width = window.innerWidth);
-    let sHeight = (starsCanvas.height = window.innerHeight);
-
-    window.addEventListener('resize', () => {
-      sWidth = starsCanvas.width = window.innerWidth;
-      sHeight = starsCanvas.height = window.innerHeight;
-    });
-
-    const stars = [];
-    for (let i = 0; i < 80; i++) {
-      stars.push({
-        x: Math.random() * sWidth,
-        y: Math.random() * sHeight,
-        r: Math.random() * 1.5 + 0.4,
-        a: Math.random() * 0.8 + 0.2,
-        speed: Math.random() * 0.02 + 0.005
-      });
-    }
-
-    function renderStars() {
-      sCtx.clearRect(0, 0, sWidth, sHeight);
-      for (let s of stars) {
-        s.a += s.speed;
-        if (s.a > 0.9 || s.a < 0.2) s.speed = -s.speed;
-        sCtx.fillStyle = `rgba(255, 255, 255, ${Math.abs(s.a)})`;
+      // Add shimmer dots
+      for (let i = 0; i < 150; i++) {
+        sCtx.fillStyle = 'rgba(255, 255, 255, 0.4)';
         sCtx.beginPath();
-        sCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        sCtx.arc(Math.random() * w, Math.random() * h, Math.random() * 2 + 1, 0, Math.PI * 2);
         sCtx.fill();
       }
-      requestAnimationFrame(renderStars);
+
+      // Add instruction label on the foil
+      sCtx.fillStyle = '#2b173e';
+      sCtx.font = 'bold 15px Poppins, sans-serif';
+      sCtx.textAlign = 'center';
+      sCtx.fillText('✨ SCRATCH HERE WITH FINGER / MOUSE ✨', w / 2, h / 2 - 8);
+
+      sCtx.font = 'italic 12px Poppins, sans-serif';
+      sCtx.fillStyle = '#e01a22';
+      sCtx.fillText('Mummu Ka Secret Contract Dekhne Ke Liye...', w / 2, h / 2 + 16);
     }
-    renderStars();
+
+    let isDrawing = false;
+    let scratchedPercentage = 0;
+    let autoCleared = false;
+
+    function scratch(e) {
+      if (!isDrawing || autoCleared) return;
+
+      const rect = scratchCanvas.getBoundingClientRect();
+      let clientX, clientY;
+
+      if (e.touches && e.touches[0]) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
+
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+
+      sCtx.globalCompositeOperation = 'destination-out';
+      sCtx.beginPath();
+      sCtx.arc(x, y, 24, 0, Math.PI * 2);
+      sCtx.fill();
+
+      checkScratched();
+    }
+
+    function checkScratched() {
+      if (autoCleared) return;
+      const w = scratchCanvas.width;
+      const h = scratchCanvas.height;
+      const imgData = sCtx.getImageData(0, 0, w, h);
+      const pixels = imgData.data;
+      let transparentCount = 0;
+
+      // Sample every 4th pixel for performance
+      for (let i = 3; i < pixels.length; i += 16) {
+        if (pixels[i] === 0) {
+          transparentCount++;
+        }
+      }
+
+      const totalSampled = pixels.length / 16;
+      scratchedPercentage = (transparentCount / totalSampled) * 100;
+
+      if (scratchedPercentage > 40) {
+        autoCleared = true;
+        scratchCanvas.style.transition = 'opacity 0.6s ease';
+        scratchCanvas.style.opacity = '0';
+        if (scratchHint) {
+          scratchHint.innerHTML = '🎉 <strong>Contract Officially Revealed!</strong> ❤️';
+          scratchHint.style.color = '#4ade80';
+        }
+        setTimeout(() => {
+          scratchCanvas.remove();
+        }, 650);
+      }
+    }
+
+    // Event Listeners for scratch
+    scratchCanvas.addEventListener('mousedown', () => { isDrawing = true; });
+    window.addEventListener('mouseup', () => { isDrawing = false; });
+    scratchCanvas.addEventListener('mousemove', scratch);
+
+    scratchCanvas.addEventListener('touchstart', (e) => {
+      isDrawing = true;
+      scratch(e);
+      e.preventDefault();
+    }, { passive: false });
+
+    window.addEventListener('touchend', () => { isDrawing = false; });
+    scratchCanvas.addEventListener('touchmove', (e) => {
+      scratch(e);
+      e.preventDefault();
+    }, { passive: false });
+
+    // Initial sizing
+    setTimeout(resizeScratchCanvas, 100);
+    window.addEventListener('resize', resizeScratchCanvas);
   }
 
-  // Initialize the first question
-  renderQuestion(0);
+  // ==================================================================
+  // 7. THE FAMOUS RUNAWAY "NO" BUTTON
+  // ==================================================================
+  const btnNo = document.getElementById('btn-no');
+  const btnYes = document.getElementById('btn-yes');
+  const decisionWrap = document.getElementById('decision-buttons-wrap');
+  const runawayHint = document.getElementById('runaway-hint');
+  const avatarFace = document.getElementById('avatar-face');
+  const decisionEmoji = document.getElementById('decision-emoji');
 
-})();
+  const noResponses = (config.noResponses && config.noResponses.length > 0)
+    ? config.noResponses
+    : [
+        'No 😤',
+        'Pakka? 🥺',
+        'Ek baar aur soch lo...',
+        'Mummu sach me ro dega 😭',
+        'Diet Coke chilled wali dunga, pakka! 🥤',
+        'Ek tight hug bhi dunga! 🫂',
+        'Please na Akansha... 🥺🥺',
+        'Ab toh YES bolna hi padega! 😏'
+      ];
+
+  let runawayAttempts = 0;
+
+  function runAway() {
+    runawayAttempts++;
+
+    // Update text
+    const nextText = noResponses[runawayAttempts % noResponses.length];
+    const noTextEl = btnNo.querySelector('.btn-text');
+    if (noTextEl) noTextEl.textContent = nextText;
+
+    // Update puppy eyes / sad faces
+    if (avatarFace) avatarFace.textContent = runawayAttempts % 2 === 0 ? '😭' : '🥺';
+    if (decisionEmoji) decisionEmoji.textContent = '😭';
+
+    // Calculate runaway movement
+    const wrapRect = decisionWrap.getBoundingClientRect();
+    const btnRect = btnNo.getBoundingClientRect();
+
+    const maxDeltaX = Math.min(window.innerWidth - 120, 260);
+    const maxDeltaY = 90;
+
+    const randomX = (Math.random() - 0.5) * maxDeltaX * 1.5;
+    const randomY = (Math.random() - 0.5) * maxDeltaY * 2;
+
+    const scale = Math.max(0.65, 1 - runawayAttempts * 0.05);
+
+    btnNo.style.position = 'relative';
+    btnNo.style.transform = `translate(${randomX}px, ${randomY}px) scale(${scale})`;
+    btnNo.style.zIndex = '50';
+
+    // Enlarge the YES button subtly to encourage clicking
+    if (btnYes) {
+      const yesScale = Math.min(1.35, 1 + runawayAttempts * 0.05);
+      btnYes.style.transform = `scale(${yesScale})`;
+    }
+
+    // After 7 attempts, disable the NO button playfully
+    if (runawayAttempts >= 8) {
+      btnNo.style.opacity = '0';
+      btnNo.style.pointerEvents = 'none';
+      if (runawayHint) {
+        runawayHint.innerHTML = '🚫 <strong>NO button is officially broken! Only YES is allowed! 😜❤️</strong>';
+        runawayHint.style.color = '#ff4d79';
+      }
+    }
+  }
+
+  if (btnNo) {
+    btnNo.addEventListener('mouseenter', runAway);
+    btnNo.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      runAway();
+    }, { passive: false });
+    btnNo.addEventListener('click', (e) => {
+      e.preventDefault();
+      runAway();
+    });
+  }
+
+  // ==================================================================
+  // 8. THE YES CLIMAX & CELEBRATION
+  // ==================================================================
+  const modal = document.getElementById('celebration-modal');
+  const flashOverlay = document.getElementById('flash-overlay');
+  const btnCloseModal = document.getElementById('btn-close-modal');
+
+  function triggerCelebration() {
+    // 1. Flash effect
+    if (flashOverlay) {
+      flashOverlay.style.opacity = '0.85';
+      setTimeout(() => {
+        flashOverlay.style.opacity = '0';
+      }, 400);
+    }
+
+    // 2. Multi-stage confetti cannon
+    if (typeof confetti === 'function') {
+      const count = 250;
+      const defaults = {
+        origin: { y: 0.65 },
+        zIndex: 10001
+      };
+
+      function fire(particleRatio, opts) {
+        confetti(
+          Object.assign({}, defaults, opts, {
+            particleCount: Math.floor(count * particleRatio)
+          })
+        );
+      }
+
+      fire(0.25, {
+        spread: 26,
+        startVelocity: 55,
+        colors: ['#ff4d79', '#e01a22', '#ffffff']
+      });
+      fire(0.2, {
+        spread: 60,
+        colors: ['#ffd166', '#ff758c', '#e01a22']
+      });
+      fire(0.35, {
+        spread: 100,
+        decay: 0.91,
+        scalar: 0.8
+      });
+      fire(0.1, {
+        spread: 120,
+        startVelocity: 25,
+        decay: 0.92,
+        scalar: 1.2
+      });
+      fire(0.1, {
+        spread: 120,
+        startVelocity: 45
+      });
+    }
+
+    // 3. Launch Fireworks on Canvas
+    launchFireworks();
+
+    // 4. Show Celebration Modal
+    setTimeout(() => {
+      if (modal) modal.classList.add('show');
+    }, 500);
+
+    // 5. Update Avatar to Joy
+    if (avatarFace) avatarFace.textContent = '🥰';
+    if (decisionEmoji) decisionEmoji.textContent = '💖';
+  }
+
+  if (btnYes) {
+    btnYes.addEventListener('click', triggerCelebration);
+  }
+
+  if (btnCloseModal && modal) {
+    btnCloseModal.addEventListener('click', () => {
+      modal.classList.remove('show');
+    });
+  }
+
+  // ==================================================================
+  // 9. FIREWORKS CANVAS LOGIC
+  // ==================================================================
+  function launchFireworks() {
+    const fCanvas = document.getElementById('fireworks-canvas');
+    if (!fCanvas) return;
+    const fCtx = fCanvas.getContext('2d');
+    fCanvas.width = window.innerWidth;
+    fCanvas.height = window.innerHeight;
+
+    const fireworks = [];
+    const colors = ['#ff4d79', '#ff758c', '#ffd166', '#e01a22', '#ffffff', '#4ade80'];
+
+    for (let f = 0; f < 6; f++) {
+      setTimeout(() => {
+        const startX = Math.random() * (fCanvas.width * 0.7) + fCanvas.width * 0.15;
+        const startY = Math.random() * (fCanvas.height * 0.45) + fCanvas.height * 0.15;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+
+        for (let i = 0; i < 45; i++) {
+          const angle = (Math.PI * 2 * i) / 45;
+          const speed = Math.random() * 5 + 2;
+          fireworks.push({
+            x: startX,
+            y: startY,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            alpha: 1,
+            color: color,
+            decay: Math.random() * 0.02 + 0.015
+          });
+        }
+      }, f * 350);
+    }
+
+    let fAnimFrame;
+    function renderFireworks() {
+      fCtx.clearRect(0, 0, fCanvas.width, fCanvas.height);
+
+      for (let i = fireworks.length - 1; i >= 0; i--) {
+        const p = fireworks[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.06; // gravity
+        p.alpha -= p.decay;
+
+        if (p.alpha <= 0) {
+          fireworks.splice(i, 1);
+          continue;
+        }
+
+        fCtx.save();
+        fCtx.globalAlpha = p.alpha;
+        fCtx.fillStyle = p.color;
+        fCtx.beginPath();
+        fCtx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+        fCtx.fill();
+        fCtx.restore();
+      }
+
+      if (fireworks.length > 0) {
+        fAnimFrame = requestAnimationFrame(renderFireworks);
+      } else {
+        fCtx.clearRect(0, 0, fCanvas.width, fCanvas.height);
+        cancelAnimationFrame(fAnimFrame);
+      }
+    }
+
+    renderFireworks();
+  }
+});

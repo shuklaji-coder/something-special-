@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Akansha & Mummu Love Quiz ❤️ | 30 Romantic Questions</title>
-  <meta name="description" content="A 30-question love quiz handcrafted for Akansha Mishra by Rohan Shukla (Your Favourite Mummu).">
+  <title>I Am So Sorry, Akansha ❤️ | From Your Mummu</title>
+  <meta name="description" content="A heartfelt, loving apology crafted specially for Akansha Mishra by Rohan Shukla (Your Favourite Mummu).">
   <meta name="theme-color" content="#0d0914">
 
   <!-- Google Fonts -->
@@ -25,265 +25,300 @@
   <div class="ambient-glow bg-orb-2"></div>
   <div class="ambient-glow bg-orb-3"></div>
 
-  <!-- Background Stars Canvas -->
-  <canvas id="stars-canvas"></canvas>
+  <!-- Background Animated Particles Canvas (Stars, Hearts, Diet Coke Fizz) -->
+  <canvas id="particles-canvas"></canvas>
 
-  <!-- Full-Screen Cinema Fireworks Canvas (For Climax & Celebration) -->
+  <!-- Climax Fireworks Canvas -->
   <canvas id="fireworks-canvas"></canvas>
 
-  <!-- Camera Flash Overlay -->
+  <!-- Camera Flash Overlay for YES Climax -->
   <div id="flash-overlay"></div>
 
-  <!-- Background Music Audio Element -->
-  <audio id="quiz-bg-audio" src="assets/bg_music.mp3" autoplay loop playsinline preload="auto"></audio>
+  <!-- Background Music Audio -->
+  <audio id="bg-audio" src="assets/bg_music.mp3" loop playsinline preload="auto"></audio>
 
-  <!-- ==========================================================================
-       START / WELCOME SCREEN (Autoplay Unlocker & Intro)
-       ========================================================================== -->
-  <div id="intro-modal" class="intro-overlay">
-    <div class="intro-card">
-      <div class="intro-heart-icon">💖</div>
-      <div class="intro-badge">SPECIALLY CRAFTED FOR AKANSHA MISHRA</div>
-      <h1 class="intro-title">The 30-Question Love Quiz</h1>
-      <p class="intro-subtitle">
-        Borivali se lekar Dahisar tak... aur uss black dress wali pehli mulaqat se lekar aaj tak!
-      </p>
-
-      <div class="intro-stats-grid">
-        <div class="intro-stat-pill">
-          <span class="pill-label">Total Questions</span>
-          <span class="pill-val">30 Pyaare Sawal</span>
-        </div>
-        <div class="intro-stat-pill">
-          <span class="pill-label">Rule</span>
-          <span class="pill-val">Har sawal ka Screenshot Mummu ko bhejna hai! 📸</span>
-        </div>
-      </div>
-
-      <div class="intro-route-note">
-        📍 <strong>Borivali</strong> (Rohan) ⇄ <strong>Dahisar</strong> (Akansha) • 2.0 km
-      </div>
-
-      <button id="btn-start-quiz" class="btn-start-pulse">
-        <span>✨ Start Love Quiz & Play Music 🎵 ✨</span>
-      </button>
-
-      <div class="intro-credit">
-        Coded with ❤️ by <strong>your favourite mummu</strong> (Rohan Shukla — Software Engineer)
-      </div>
+  <!-- Floating Audio Player Bar -->
+  <div class="music-pill" id="music-pill" title="Toggle Music">
+    <div class="vinyl-disc" id="vinyl-disc">🎵</div>
+    <div class="music-info">
+      <span class="music-track" id="music-track">Dil Ye Bekarar Kyun Hai</span>
+      <span class="music-sub" id="music-status">Tap to Play / Pause</span>
     </div>
+    <button class="music-toggle-btn" id="music-toggle-btn" aria-label="Play/Pause Music">
+      <span id="music-icon">▶️</span>
+    </button>
   </div>
 
-  <!-- ==========================================================================
-       MAIN APP WRAPPER
-       ========================================================================== -->
-  <div class="quiz-app-container">
+  <!-- Main Container -->
+  <main class="page-container">
 
-    <!-- Top Navigation Header -->
-    <header class="quiz-top-nav">
-      <div class="nav-branding">
-        <span class="nav-heart-logo">❤️</span>
-        <div class="nav-title-group">
-          <div class="nav-main-title">Akansha & Mummu</div>
-          <div class="nav-sub-title">Borivali ⇄ Dahisar (2 km)</div>
-        </div>
+    <!-- ==========================================
+         HERO SECTION: THE APOLOGY
+         ========================================== -->
+    <header class="hero-section">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        <span>📍 BORIVALI TO DAHISAR &bull; JUST 2 KM AWAY</span>
       </div>
 
-      <div class="nav-controls">
-        <!-- Floating Music Controller Pill -->
-        <button id="music-toggle-btn" class="music-pill active" title="Toggle Background Music">
-          <span class="music-note-icon">🎵</span>
-          <div class="music-eq-waves">
-            <span class="wave-bar"></span>
-            <span class="wave-bar"></span>
-            <span class="wave-bar"></span>
-          </div>
-          <span class="music-label">Dil Ye Bekarar</span>
-        </button>
+      <!-- Cute Animated Character / Emoji Avatar -->
+      <div class="avatar-wrapper">
+        <div class="avatar-glow"></div>
+        <div class="avatar-face" id="avatar-face">🥺</div>
+        <div class="avatar-hands">🙏</div>
+      </div>
+
+      <h1 class="hero-title">
+        Meri Pyaari Akansha,<br>
+        <span class="gradient-text">Please Maaf Kardo Na?</span> 🥺
+      </h1>
+
+      <p class="hero-subtitle">
+        Dedicated to the girl with the prettiest smile in Mumbai,<br>
+        from your favourite Mummu &bull; <em>Rohan Shukla</em>
+      </p>
+
+      <!-- Heartfelt Apology Letter Box -->
+      <div class="letter-card">
+        <div class="letter-stamp">❤️ MUMMU'S APOLOGY</div>
+        <div class="letter-content" id="letter-content">
+          <!-- Dynamically populated from config.js -->
+        </div>
+        <div class="letter-signature">
+          <span>Tadapta hua dil se,</span>
+          <strong>— Rohan (Your Software Engineer Mummu) 👨‍💻❤️</strong>
+        </div>
       </div>
     </header>
 
-    <!-- Progress Tracker Bar -->
-    <div class="progress-section">
-      <div class="progress-meta">
-        <span class="progress-badge" id="badge-question-num">Question 1 of 30</span>
-        <span class="progress-love-score">Romance Level: <strong id="love-score-txt">100%</strong> 💖</span>
-      </div>
-      <div class="progress-track">
-        <div id="progress-bar-fill" class="progress-fill" style="width: 3.33%;"></div>
-      </div>
-    </div>
-
-    <!-- MAIN INTERACTIVE QUIZ CARD (Aesthetic, Screenshot-Ready) -->
-    <main class="quiz-card-wrapper">
-      <div id="screenshot-target-card" class="quiz-main-card">
-
-        <!-- Card Watermark Header for Screenshots -->
-        <div class="card-screenshot-header">
-          <span class="card-watermark">Akansha Mishra ❤️ Rohan Shukla</span>
-          <span class="card-tag-pill" id="card-category-tag">First Spark ✨</span>
-        </div>
-
-        <!-- Question Number & Prompt -->
-        <div class="card-question-box">
-          <div class="q-number-circle" id="q-circle-num">1</div>
-          <h2 class="q-main-text" id="q-main-text">
-            Pehli baar jab Rohan ne pucha 'Maine aapko Borivali me dekha tha black kapdo me'... tab sach me dimaag me kya aaya tha?
-          </h2>
-        </div>
-
-        <!-- Dynamic Milestone Content (Photos, Videos, Scratch Card) -->
-        <div id="milestone-container" class="milestone-box hidden">
-          <!-- Injected dynamically via JavaScript -->
-        </div>
-
-        <!-- 4 Options Container -->
-        <div class="q-options-grid" id="q-options-container">
-          <!-- Dynamically populated -->
-        </div>
-
-        <!-- Mummu's Reaction Box (Reveals when option is picked) -->
-        <div id="reaction-box" class="mummu-reaction-card hidden">
-          <div class="reaction-avatar-row">
-            <span class="reaction-avatar">🥰</span>
-            <span class="reaction-author">Mummu says:</span>
-          </div>
-          <p id="reaction-text" class="reaction-message">
-            Sach bolun toh uss black dress me tum itni khoobsurat lag rahi thin ki nazar hatana namumkin tha! ✨
-          </p>
-        </div>
-
-        <!-- Screenshot & WhatsApp Send Strip (Har sawal ka SS bhejna hai!) -->
-        <div id="screenshot-action-strip" class="screenshot-strip hidden">
-          <div class="ss-prompt-tag">
-            📸 <strong>Har sawal ka Screenshot Mummu ko bhejo!</strong>
-          </div>
-          <div class="ss-action-btns">
-            <button id="btn-copy-answer" class="btn-ss-action btn-copy">
-              <span>📋 Copy Answer</span>
-            </button>
-            <a id="btn-whatsapp-answer" href="#" target="_blank" class="btn-ss-action btn-wa">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
-              <span>📲 Send on WhatsApp</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- Card Footer Watermark -->
-        <div class="card-footer-watermark">
-          <span>Your Favourite Mummu • Software Engineer</span>
-          <span>📍 2 km Distance</span>
-        </div>
-
-      </div>
-    </main>
-
-    <!-- Bottom Navigation Controls -->
-    <footer class="quiz-bottom-nav">
-      <button id="btn-prev-q" class="nav-btn btn-prev" disabled>
-        <span>⬅️ Previous</span>
-      </button>
-
-      <!-- Jumper / Counter Indicator -->
-      <div class="nav-center-counter">
-        <span id="counter-current">1</span> / 30
-      </div>
-
-      <button id="btn-next-q" class="nav-btn btn-next">
-        <span>Next Question ➡️</span>
-      </button>
-    </footer>
-
-  </div>
-
-  <!-- ==========================================================================
-       PROPOSAL CLIMAX MODAL (QUESTION 30 FINALE)
-       ========================================================================== -->
-  <div id="proposal-modal" class="proposal-overlay hidden">
-    <div class="proposal-box">
-      <div class="proposal-ring-icon">💍✨</div>
-      <div class="proposal-mini-tag">QUESTION 30: THE GRAND FINALE</div>
-      
-      <h2 class="proposal-title">Akansha Mishra...</h2>
-      <p class="proposal-speech">
-        Borivali me uss black outfit me dekhne se lekar, Dahisar ki 2 km ki doori tak...<br>
-        Aur late-night calls se lekar har ek muskaan tak, mera dil sirf aur sirf tumhara ho chuka hai.
+    <!-- ==========================================
+         DIET COKE PEACE OFFERING SECTION
+         ========================================== -->
+    <section class="diet-coke-section">
+      <div class="section-tag">OFFICIAL PEACE OFFERING 🥤</div>
+      <h2 class="section-title">A Chilled Can Of Diet Coke</h2>
+      <p class="section-subtitle">
+        Kyunki mujhe pata hai Akansha Mishra ko sabse zyada kya pasand hai! Tap the can to open your chilled treat 👇
       </p>
 
-      <div class="proposal-highlight-question">
-        Kya tum Rohan Shukla (tumhare favourite Mummu) ki Girlfriend banogi?<br>
-        <span>Will you be mine forever? ❤️</span>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="proposal-btn-container">
-        <button id="btn-proposal-yes" class="btn-yes-huge">
-          <span>YES! 1000 Baar YES! Hamesha ke liye tumhari ❤️💍</span>
-        </button>
-        <button id="btn-proposal-no" class="btn-no-runaway">
-          <span>No 🙈</span>
-        </button>
-      </div>
-
-      <div class="proposal-mummu-sign">
-        — Rohan Shukla (Your Favourite Mummu)
-      </div>
-    </div>
-  </div>
-
-  <!-- ==========================================================================
-       GRAND CELEBRATION MODAL (AFTER SHE SAYS YES!)
-       ========================================================================== -->
-  <div id="celebration-modal" class="celebration-overlay hidden">
-    <div class="celebration-card">
-      <div class="celebration-firework-icon">🎆🎉</div>
-      <div class="celebration-badge">OFFICIALLY TOGETHER FOREVER</div>
-      <h1 class="celebration-heading">SHE SAID YES! ❤️</h1>
-      <p class="celebration-subheading">MAINE KAHA THA NA! Dil toh pehle se tumhara tha!</p>
-
-      <!-- Photos Trio -->
-      <div class="celebration-photos-strip">
-        <div class="celeb-photo-wrapper tilt-left">
-          <img src="assets/photo1.jpg" alt="Akansha 1">
+      <div class="coke-stage">
+        <!-- Interactive 3D Diet Coke Can -->
+        <div class="coke-can" id="coke-can" role="button" tabindex="0" title="Click to open your Diet Coke!">
+          <div class="coke-tab" id="coke-tab"></div>
+          <div class="coke-top-rim"></div>
+          <div class="coke-body">
+            <div class="coke-shine"></div>
+            <!-- Condensation droplets -->
+            <div class="droplet d1"></div>
+            <div class="droplet d2"></div>
+            <div class="droplet d3"></div>
+            <div class="droplet d4"></div>
+            <div class="droplet d5"></div>
+            
+            <div class="coke-label">
+              <span class="coke-brand-diet">Diet</span>
+              <span class="coke-brand-coke">Coke</span>
+              <span class="coke-for-akansha">Specially for Akansha ❤️</span>
+            </div>
+          </div>
+          <div class="coke-bottom-rim"></div>
+          <div class="coke-shadow"></div>
         </div>
-        <div class="celeb-photo-wrapper center-pop">
-          <img src="assets/photo2.jpg" alt="Akansha 2">
-        </div>
-        <div class="celeb-photo-wrapper tilt-right">
-          <img src="assets/photo3.jpg" alt="Akansha 3">
-        </div>
+
+        <!-- Pop sound effect bubbles/fizz container -->
+        <div class="fizz-container" id="fizz-container"></div>
       </div>
 
-      <div class="celebration-body-text">
+      <!-- Diet Coke Reward Card (Revealed on Click) -->
+      <div class="coke-reward-card" id="coke-reward-card">
+        <div class="reward-sparkles">✨🥤✨</div>
+        <h3>TREATY UNLOCKED: Unlimited Diet Coke!</h3>
         <p>
-          Ab doori officially khatam! Borivali se Dahisar sirf <strong>2 km</strong> aur 5 minute ka rasta hai, ab toh roz milna padega! 🥰
-        </p>
-        <p style="font-weight: 600; color: var(--gold-primary);">
-          📸 Is celebration screen ka screenshot leke apne favourite Mummu ko abhi bhejo!
+          Whenever Akansha is angry, stressed, or happy: Mummu will deliver chilled Diet Coke to Dahisar instantly! Free refills for lifetime + 100 cuddles. 🥰
         </p>
       </div>
+    </section>
 
-      <!-- Creator Highlight Credit -->
-      <div class="celebration-engineer-credit">
-        ❤️ Handcrafted with endless love by <strong>your favourite mummu</strong><br>
-        <span class="engineer-title">(Rohan Shukla — Software Engineer)</span>
+    <!-- ==========================================
+         6 REASONS & SACRED PROMISES CARDS
+         ========================================== -->
+    <section class="promises-section">
+      <div class="section-tag">DIL KI BAAT 💌</div>
+      <h2 class="section-title">Mummu Ke 6 Sacred Promises</h2>
+      <p class="section-subtitle">
+        Jo galti hui usse sudharne ke liye aur meri jaan ko wapas khush karne ke liye...
+      </p>
+
+      <div class="promises-grid" id="promises-grid">
+        <!-- Injected via JavaScript from config.js -->
+      </div>
+    </section>
+
+    <!-- ==========================================
+         AKANSHA'S PHOTO & REEL GALLERY
+         ========================================== -->
+    <section class="gallery-section">
+      <div class="section-tag">LOOK AT THAT SMILE ✨</div>
+      <h2 class="section-title">Yeh Muskaan Meri Jaan Hai</h2>
+      <p class="section-subtitle">
+        Borivali mein uss pehli mulaqat se lekar aaj tak, tumhari muskaan hi meri poori duniya hai... please gussa thook do na? 🥺
+      </p>
+
+      <div class="photo-cards-grid">
+        <div class="memory-card">
+          <div class="memory-frame">
+            <img src="assets/photo1.jpg" alt="Akansha Mishra" class="memory-img" loading="lazy">
+            <div class="memory-overlay">
+              <span>Meri Sabse Pyaari Akansha ❤️</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="memory-card">
+          <div class="memory-frame">
+            <img src="assets/photo2.jpg" alt="Akansha Mishra" class="memory-img" loading="lazy">
+            <div class="memory-overlay">
+              <span>The Prettiest Smile in Mumbai ✨</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="memory-card">
+          <div class="memory-frame">
+            <img src="assets/photo3.jpg" alt="Akansha Mishra" class="memory-img" loading="lazy">
+            <div class="memory-overlay">
+              <span>Sirf Tum Aur Tumhara Mummu 💖</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Celebration Actions -->
-      <div class="celebration-actions-row">
-        <button id="btn-more-fireworks" class="btn-celeb-fireworks">
-          <span>🎆 More Fireworks & Hearts! 🎆</span>
-        </button>
-        <a id="btn-whatsapp-final" href="https://api.whatsapp.com/send?text=Maine%20YES%20bol%20diya%20hai!%20%E2%9D%A4%EF%B8%8F%20Ab%20jaldi%20se%20Dahisar%20aao%20aur%20mujhe%20milne%20le%20chalo!%20%F0%9F%A5%B0%E2%9C%A8" target="_blank" class="btn-celeb-whatsapp">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
-          <span>Send Final YES on WhatsApp</span>
-        </a>
+      <!-- Romantic Video Reel Container -->
+      <div class="video-card">
+        <div class="video-header">
+          <span>📹 Sweet Memories with Akansha</span>
+          <span class="video-badge">Mummu's Favourite</span>
+        </div>
+        <div class="video-wrapper">
+          <video id="memory-video" src="assets/video.mp4" controls playsinline loop preload="metadata" poster="assets/photo1.jpg"></video>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         INTERACTIVE SCRATCH CARD
+         ========================================== -->
+    <section class="scratch-section">
+      <div class="section-tag">CONFIDENTIAL 📜</div>
+      <h2 class="section-title">Mummu's Secret Apology Contract</h2>
+      <p class="section-subtitle">
+        Apne haathon se scratch karke dekho Mummu ka secret promise 👇
+      </p>
+
+      <div class="scratch-card-container">
+        <!-- Hidden Secret Message Behind Scratch Canvas -->
+        <div class="scratch-secret" id="scratch-secret">
+          <div class="secret-seal">⚖️ OFFICIAL CONTRACT</div>
+          <h4 id="contract-title">MUMMU'S SPECIAL CONTRACT 📜</h4>
+          <p id="contract-message">
+            "I, Rohan Shukla, solemnly promise to pamper Akansha Mishra forever, buy her Diet Coke whenever she craves, and never repeat this mistake! Maaf kardo meri jaan ❤️"
+          </p>
+          <div class="contract-sign" id="contract-sign">
+            — Your Favourite Mummu (Rohan)
+          </div>
+          <div class="contract-stamp-icon">APPROVED WITH LOVE ❤️</div>
+        </div>
+
+        <!-- Scratch Surface Canvas -->
+        <canvas id="scratch-canvas"></canvas>
+      </div>
+      <div class="scratch-hint" id="scratch-hint">
+        👆 Finger ya Mouse se scratch karo (Scratch here)!
+      </div>
+    </section>
+
+    <!-- ==========================================
+         THE FORGIVENESS DECISION (CLIMAX)
+         ========================================== -->
+    <section class="decision-section" id="decision-section">
+      <div class="decision-box">
+        <div class="decision-emoji" id="decision-emoji">🥺</div>
+        <h2 class="decision-title">Toh Sach Sach Batao...</h2>
+        <p class="decision-prompt">Apne favourite Mummu ko maaf kiya ya nahi?</p>
+
+        <div class="decision-buttons" id="decision-buttons-wrap">
+          <button class="btn-yes" id="btn-yes">
+            <span class="btn-glow"></span>
+            <span class="btn-text">YES, Maaf Kiya! ❤️</span>
+          </button>
+
+          <button class="btn-no" id="btn-no">
+            <span class="btn-text">No 😤</span>
+          </button>
+        </div>
+
+        <p class="runaway-hint" id="runaway-hint">
+          (P.S. "No" button bohot shaitaan hai, touch karne par bhaag jaata hai! 😜)
+        </p>
+      </div>
+    </section>
+
+    <!-- Footer Note -->
+    <footer class="page-footer">
+      <p>Made with 100% pure love, repentance & Diet Coke 🥤</p>
+      <p class="footer-sub">
+        Crafted by <strong>Rohan Shukla (Software Engineer)</strong> for <strong>Akansha Mishra</strong> ❤️
+      </p>
+      <p class="footer-dist">Dahisar ⇄ Borivali &bull; Distance: 2 km, Love: Infinite</p>
+    </footer>
+
+  </main>
+
+  <!-- ==========================================
+       CELEBRATION SUCCESS MODAL (After YES!)
+       ========================================== -->
+  <div class="modal-backdrop" id="celebration-modal">
+    <div class="modal-card">
+      <div class="modal-burst-emoji">🎉🥤❤️🥳</div>
+      <div class="modal-badge">YAAAY! MISSION ACCOMPLISHED!</div>
+      <h2 class="modal-title">Akansha Ne Maaf Kar Diya! 😭❤️</h2>
+      
+      <p class="modal-desc">
+        Mummu is officially the happiest person alive right now! Thank you meri jaan... aage se aisi koi bhi galti nahi hogi.
+      </p>
+
+      <div class="modal-gift-banner">
+        <div class="gift-icon">🥤🛵💨</div>
+        <div class="gift-text">
+          <strong>Chilled Diet Coke Dispatched!</strong>
+          <span>Borivali to Dahisar (5 mins me pahunch raha hai!)</span>
+        </div>
       </div>
 
+      <!-- Akansha & Mummu Photo Showcase in Modal -->
+      <div class="modal-photos-row">
+        <img src="assets/photo1.jpg" alt="Akansha" class="modal-img">
+        <img src="assets/photo2.jpg" alt="Akansha" class="modal-img">
+        <img src="assets/photo3.jpg" alt="Akansha" class="modal-img">
+      </div>
+
+      <!-- Action Button: Send WhatsApp confirmation to Mummu -->
+      <a href="#" id="whatsapp-btn" class="whatsapp-btn" target="_blank" rel="noopener noreferrer">
+        <span class="wa-icon">💬</span>
+        <span>Mummu ko WhatsApp par batao! ❤️</span>
+      </a>
+
+      <button class="btn-close-modal" id="btn-close-modal">
+        Pyaar Se Band Karein 🥰
+      </button>
+
+      <div class="modal-credit">
+        — From Rohan Shukla (Your Favourite Mummu) with infinite love ❤️
+      </div>
     </div>
   </div>
 
-  <!-- Scripts -->
+  <!-- Load Configuration & Logic Scripts -->
   <script src="config.js"></script>
   <script src="script.js"></script>
 </body>
